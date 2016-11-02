@@ -34,7 +34,7 @@ public class Goal : MonoBehaviour {
 				p1Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player1Score += 3;
-				textField.text = "Player 1 Wins!!!";
+				textField.text = "Green Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
 
@@ -42,7 +42,7 @@ public class Goal : MonoBehaviour {
 				p2Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player2Score += 3;
-				textField.text = "Player 2 Wins!!!";
+				textField.text = "Red Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
 
@@ -50,7 +50,7 @@ public class Goal : MonoBehaviour {
 				p3Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player3Score += 3;
-				textField.text = "Player 3 Wins!!!";
+				textField.text = "Purple Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
 
@@ -58,7 +58,7 @@ public class Goal : MonoBehaviour {
 				p4Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player4Score += 3;
-				textField.text = "Player 4 Wins!!!";
+				textField.text = "Blue Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
 		}
@@ -93,7 +93,7 @@ public class Goal : MonoBehaviour {
 			if (endTime < 0) {
 				levelTimer -= Time.deltaTime;
 				black.enabled = true;
-				score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
+				score.text = "Green: "+ScoreSystem.Instance.player1Score+" point(s)\nRed: "+ScoreSystem.Instance.player2Score+" point(s)\nPurple: "+ScoreSystem.Instance.player3Score+" point(s)\nBlue: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
 			if (levelTimer <= 5) {
 				textField.text = "5";
