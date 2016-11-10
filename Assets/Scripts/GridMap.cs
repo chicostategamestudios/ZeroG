@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
@@ -15,7 +15,15 @@ public class GridMap : MonoBehaviour {
 	public GameObject bSpawn;
 	public GameObject ySpawn;
 	public GameObject aSpawn;
-	public GameObject goal;
+
+    //Temporary until we find a way to not use GameObject.Find
+    private GameObject X;
+    private GameObject B;
+    private GameObject Y;
+    private GameObject A;
+
+
+    public GameObject goal;
 	public GameObject spaceMine;
 	public GameObject movingAsteroid;
 
@@ -39,6 +47,7 @@ public class GridMap : MonoBehaviour {
 	public Sprite greenLit;
 	[Tooltip("Set time delay for level preview")]public float startTimer;
 
+
 	private SpriteRenderer myOrange;
 	private SpriteRenderer myYellow;
 	private SpriteRenderer myGreen;
@@ -60,15 +69,22 @@ public class GridMap : MonoBehaviour {
 		playing = false;
 		lights.SetActive (false);
 		gameStart = false;
-		text.text = "";
+		text.text = "Find Your Route!";
 		findingPlayers = true;
 		playerNum = 1;
-		myRed = red.GetComponent<SpriteRenderer>();
+        myRed = red.GetComponent<SpriteRenderer>();
 		myOrange = orange.GetComponent<SpriteRenderer>();
 		myYellow = yellow.GetComponent<SpriteRenderer>();
 		myGreen = green.GetComponent<SpriteRenderer>();
 		generateArray = true;
-	}
+        if (!GameOptions.player2)
+            PlayerController2.S.GetComponent<GameObject>().SetActive(false);
+        if (!GameOptions.player3)
+            PlayerController3.S.GetComponent<GameObject>().SetActive(false);
+        if (!GameOptions.player4)
+            PlayerController4.S.GetComponent<GameObject>().SetActive(false);
+
+    }
 
 	IEnumerator GameStart(){
 		yield return new WaitForSeconds(startTimer);
@@ -79,10 +95,15 @@ public class GridMap : MonoBehaviour {
 		text.text = "Choose Your Launch Pad!";
 		gameStart = true;
 		PlayerController.S.playerReady = false;
-		PlayerController2.S.playerReady = false;
-		PlayerController3.S.playerReady = false;
-		PlayerController4.S.playerReady = false;
-	}
+        if(GameOptions.player2)
+		    PlayerController2.S.playerReady = false;
+        if(GameOptions.player3)
+		    PlayerController3.S.playerReady = false;
+        if(GameOptions.player4)
+		    PlayerController4.S.playerReady = false;
+        
+
+    }
 
 	void FindPlayers(){
 		player = GameObject.FindGameObjectWithTag ("Player"+playerNum);
@@ -190,10 +211,15 @@ public class GridMap : MonoBehaviour {
 
 
 
-
-
             generateArray = false;
-			GetRenders();
+
+            //Eww GameObject.Find
+            B = GameObject.Find("Spawn_B(Clone)");
+            X = GameObject.Find("Spawn_X(Clone)");
+            Y = GameObject.Find("Spawn_Y(Clone)");
+            A = GameObject.Find("Spawn_A(Clone)");
+            
+            GetRenders();
         }//end map generation
 
 		if (findingPlayers) {
@@ -202,42 +228,50 @@ public class GridMap : MonoBehaviour {
 
 		if (!playing) {
 			if (gameStart) {
-				if (numPlayers == 2) {
-					if (PlayerController.S.playerReady && PlayerController2.S.playerReady) {
-						text.text = "";
-						lights.SetActive (true);
-						timer -= Time.deltaTime;
-						myRed.sprite = redLit;
-						if (timer < 3) {
-							myRed.sprite = redDim;
-							myOrange.sprite = orangeLit;
-						}
-						if (timer < 2) {
-							myOrange.sprite = orangeDim;
-							myYellow.sprite = yellowLit;
-						}
-						if (timer < 1) {
-							myYellow.sprite = yellowDim;
-							myGreen.sprite = greenLit;
-						}
-						if (timer < 0) {
-							PlayerController.S.inMenu = false;
+				if (PlayerController.S.playerReady && PlayerController2.S.playerReady) {
+					text.text = "";
+					lights.SetActive (true);
+					timer -= Time.deltaTime;
+					myRed.sprite = redLit;
+					if (timer < 3) {
+						myRed.sprite = redDim;
+						myOrange.sprite = orangeLit;
+					}
+					if (timer < 2) {
+						myOrange.sprite = orangeDim;
+						myYellow.sprite = yellowLit;
+					}
+					if (timer < 1) {
+						myYellow.sprite = yellowDim;
+						myGreen.sprite = greenLit;
+					}
+					if (timer < 0) {
+						PlayerController.S.inMenu = false;
+                        if(GameOptions.player2)
 							PlayerController2.S.inMenu = false;
-							/*render = GetComponentsInChildren<MeshRenderer> ();
-						foreach (MeshRenderer rend in render) {
-							rend.enabled = false;
-						}*/
-							myGreen.sprite = greenDim;
-							lights.SetActive (false);
-							foreach(MeshRenderer rend in asteroidRenders){
-								rend.enabled = true;
-							}
-							playing = true;
+                        if (GameOptions.player3)
+                            PlayerController3.S.inMenu = false;
+                        if (GameOptions.player4)
+                            PlayerController4.S.inMenu = false;
+						/*render = GetComponentsInChildren<MeshRenderer> ();
+					foreach (MeshRenderer rend in render) {
+						rend.enabled = false;
+					}*/
+						myGreen.sprite = greenDim;
+						lights.SetActive (false);
+                        A.GetComponent<SpriteRenderer>().enabled = false;
+                        B.GetComponent<SpriteRenderer>().enabled = false;
+                        Y.GetComponent<SpriteRenderer>().enabled = false;
+                        X.GetComponent<SpriteRenderer>().enabled = false;
+                        Debug.Log("game start");
+                        foreach (MeshRenderer rend in asteroidRenders){
+							rend.enabled = true;
 						}
+						playing = true;
 					}
 				}
 
-				if (numPlayers == 3) {
+				/*if (numPlayers == 3) {
 					if (PlayerController.S.playerReady && PlayerController2.S.playerReady && PlayerController3.S.playerReady) {
 						//Music();
 						text.text = "";
@@ -264,7 +298,7 @@ public class GridMap : MonoBehaviour {
 							/*render = GetComponentsInChildren<MeshRenderer> ();
 						foreach (MeshRenderer rend in render) {
 							rend.enabled = false;
-						}*/
+						}
 							myGreen.sprite = greenDim;
 							lights.SetActive (false);
 							foreach(MeshRenderer rend in asteroidRenders){
@@ -303,7 +337,7 @@ public class GridMap : MonoBehaviour {
 							/*render = GetComponentsInChildren<MeshRenderer> ();
 						foreach (MeshRenderer rend in render) {
 							rend.enabled = false;
-						}*/
+						}
 							myGreen.sprite = greenDim;
 							lights.SetActive (false);
 							foreach(MeshRenderer rend in asteroidRenders){
@@ -312,7 +346,7 @@ public class GridMap : MonoBehaviour {
 							playing = true;
 						}
 					}
-				}
+				}*/
 			}
 		}
 	

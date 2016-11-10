@@ -17,6 +17,7 @@ public class Goal : MonoBehaviour {
 	private float levelTimer = 6f;
 	private bool nextGame;
 	private bool endGame;
+    public GameOptions DragScoreSystemHere;
 	// Use this for initialization
 	void Start () {
 		nextGame = false;
@@ -24,6 +25,7 @@ public class Goal : MonoBehaviour {
 		textField.text = "";
 		score.text = "";
 		black.enabled = false;
+        DragScoreSystemHere = FindObjectOfType<GameOptions>();
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -107,7 +109,7 @@ public class Goal : MonoBehaviour {
 				textField.text = "1";
 			}
 			if(levelTimer < 0){
-				SceneManager.LoadScene(nextLevel);
+                DragScoreSystemHere.LoadLevel();
 			}
 		}
 		
