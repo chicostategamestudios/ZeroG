@@ -52,7 +52,7 @@ public class GameOptions : MonoBehaviour {
     {
         bool found = false;
         int randomNumber = 0;
-        if (levelsCompleted != maxLevels)
+        if (levelsCompleted != numOfRounds)
         {
             while (!found)
             {
@@ -71,6 +71,7 @@ public class GameOptions : MonoBehaviour {
             levelsCompleted++;
         } else
         {
+            Destroy(gameObject);
             SceneManager.LoadScene("GameStart");
         }
     }

@@ -404,6 +404,15 @@ public class PlayerController4 : MonoBehaviour {
             this.transform.position = spawnPoint.transform.position;
             stopped = true;
         }
+
+        if (col.transform.tag == "seamine")
+        {
+            CameraShake.S.shakeDuration = .5f;
+            myParticle.Play();
+            this.transform.position = spawnPoint.transform.position;
+            stopped = true;
+        }
+
     }
 
     void OnTriggerExit(Collider col)

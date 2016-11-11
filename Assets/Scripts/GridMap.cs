@@ -60,7 +60,7 @@ public class GridMap : MonoBehaviour {
 	private int playerNum;
 	//private GameObject level;
 	private bool gameStart;
-	private bool playing;
+	private bool playing = false;
 	//private bool playMusic;
 
     // Use this for initialization
@@ -69,7 +69,7 @@ public class GridMap : MonoBehaviour {
 		playing = false;
 		lights.SetActive (false);
 		gameStart = false;
-		text.text = "Find Your Route!";
+		text.text = "";
 		findingPlayers = true;
 		playerNum = 1;
         myRed = red.GetComponent<SpriteRenderer>();
@@ -95,13 +95,22 @@ public class GridMap : MonoBehaviour {
 		text.text = "Choose Your Launch Pad!";
 		gameStart = true;
 		PlayerController.S.playerReady = false;
+
         if(GameOptions.player2)
 		    PlayerController2.S.playerReady = false;
-        if(GameOptions.player3)
+        else
+            PlayerController2.S.playerReady = true;
+
+        if (GameOptions.player3)
 		    PlayerController3.S.playerReady = false;
-        if(GameOptions.player4)
+        else
+            PlayerController3.S.playerReady = true;
+
+        if (GameOptions.player4)
 		    PlayerController4.S.playerReady = false;
-        
+        else
+            PlayerController4.S.playerReady = true;
+
 
     }
 
@@ -185,23 +194,24 @@ public class GridMap : MonoBehaviour {
 						sa = Instantiate(smallAsteroid, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
 						asteroids.Add(sa);
 					}
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.grey)
+					else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.clear)
 					{
 						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
 						GameObject la;
 						la = Instantiate(largeAsteroid, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
 						asteroids.Add(la);
 					}
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.magenta)
+					else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.cyan)
 					{
-						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-
-						Instantiate(spaceMine, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity);
-					}
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.white)
+                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        GameObject sm;
+                        sm = Instantiate(spaceMine, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+                        asteroids.Add(sm);
+                    }
+					/*else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.white)
 					{
 
-					}
+					}*/
 
                     Debug.Log(map.GetPixel(horrizontalPixels, verticalPixels));
                 
@@ -228,7 +238,7 @@ public class GridMap : MonoBehaviour {
 
 		if (!playing) {
 			if (gameStart) {
-				if (PlayerController.S.playerReady && PlayerController2.S.playerReady) {
+				if (PlayerController.S.playerReady && PlayerController2.S.playerReady && PlayerController3.S.playerReady && PlayerController4.S.playerReady) {
 					text.text = "";
 					lights.SetActive (true);
 					timer -= Time.deltaTime;

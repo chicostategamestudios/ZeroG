@@ -8,7 +8,7 @@ public class Rotation : MonoBehaviour {
 
     void Start()
     {
-        RotationSpeed = Random.Range(1, 250);
+        RotationSpeed = Random.Range(1, 150);
         Direction = Random.Range(1, 4);
         
     }
