@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Zero G - Created by: Zachary Coon - Last Modified: Thaddeus Thompson 2/9/2017
+
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -8,16 +10,15 @@ public class TimerDisplay : MonoBehaviour {
 
 	public float timer = 0.0f;
     public bool startTimer = false;
-
 	// Use this for initialization
 	void Start () {
-
 		MyTimerText = this.GetComponent<Text>();
 	
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		startTimer = GridMap.S.playing;
         if (startTimer) {
             timer += Time.deltaTime;
             MyTimerText.text = TimeToString();

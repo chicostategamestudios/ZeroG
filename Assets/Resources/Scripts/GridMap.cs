@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Zero G - Created by: Thaddeus Thompson - Last Modified: Thaddeus Thompson 2/9/2017
+
+using UnityEngine;
 //using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using UnityEngine.UI;
 
 public class GridMap : MonoBehaviour {
 
+	public static GridMap S;
 
 	[Tooltip("Drag your level image here to test")]public Texture2D map; //must be RW enabled and a TGA file
     private bool generateArray = false;
@@ -79,11 +82,12 @@ public class GridMap : MonoBehaviour {
 	private int playerNum;
 	//private GameObject level;
 	private bool gameStart;
-	private bool playing = false;
+	[HideInInspector]public bool playing = false;
 	//private bool playMusic;
 
 
 	void Awake(){
+		S = this;
 		//public GameObject bouncePad;
 		xSpawn = Resources.Load("Prefabs/Spawn_X") as GameObject;
 		bSpawn = Resources.Load("Prefabs/Spawn_B") as GameObject;

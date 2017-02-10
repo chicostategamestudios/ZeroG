@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Zero G - Created by: Zachary Coon - Last Modified: Thaddeus Thompson 2/2/2017
+
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
