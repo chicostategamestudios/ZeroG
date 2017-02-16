@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -44,6 +45,31 @@ public class ScoreSystem : MonoBehaviour {
 	{
 		return playerstats [player] [level].deaths;
 	}
+	//Get the total number of deaths of argument player across all levels
+	public int GetTotalDeaths(int player)
+	{
+		int total_deaths = 0;
+		for (int i = 1; i < playerstats [player].Count() + 1; i++) 
+		{
+			total_deaths += playerstats [player] [i].deaths;
+		}
+		return total_deaths;
+	}
+	//Return the number of the player with the most total deaths. 
+	public int MostTotalDeaths()
+	{
+		int max = GetTotalDeaths(1);
+		int max_player = 1;
+		for (int i = 2; i <= num_players; i++) 
+		{
+			if (GetTotalDeaths(i) > max) 
+			{
+				max_player = i;
+				max = GetTotalDeaths (i);
+			}
+		}
+		return max_player;
+	}
 	//Record the time of argument float time for argument int player in argument int level. 
 	public void SetTime(float time, int level, int player)
 	{
@@ -53,6 +79,46 @@ public class ScoreSystem : MonoBehaviour {
 	public float GetTime(int level, int player)
 	{
 		return playerstats [player] [level].time;
+	}
+	//Return the total time of argument player across all levels
+	public float GetTotalTime(int player)
+	{
+		float total_time = 0;
+		for (int i = 1; i <= playerstats [player].Count; i++) 
+		{
+			total_time += playerstats [player] [i].time;
+		}
+		return total_time;
+	}
+	//Return player number of player with the slowest total time. Pass by reference that time. 
+	public int SlowestTime(ref float time)
+	{
+		time = GetTotalTime(1);
+		int slow_player = 1;
+		for (int i = 2; i <= num_players; i++) 
+		{
+			if (GetTotalDeaths(i) > time) 
+			{
+				slow_player = i;
+				time = GetTotalDeaths (i);
+			}
+		}
+		return slow_player;
+	}
+	//Return player number of player with the fastest total time. Pass by reference that time. 
+	public int FastestTime(ref float time)
+	{
+		time = GetTotalTime(1);
+		int fast_player = 1;
+		for (int i = 2; i <= num_players; i++) 
+		{
+			if (GetTotalDeaths(i) < time) 
+			{
+				fast_player = i;
+				time = GetTotalDeaths (i);
+			}
+		}
+		return fast_player;
 	}
 	//Record the score of argument int score for argument int player in argument int level.
 	public void SetScore(int score, int level, int player)
@@ -82,6 +148,29 @@ public class ScoreSystem : MonoBehaviour {
 	public int GetPlace(int place, int level, int player)
 	{
 		return playerstats [player] [level].place;
+	}
+	//Return a player # if that player got 1st place every time. Otherwise, return -1. 
+	public int King()
+	{
+		//For each player
+		for (int cur_player = 1; cur_player <= num_players; cur_player++) 
+		{
+			bool is_king = true;
+			//For each level
+			for (int cur_level = 1; cur_level <= playerstats [cur_player].Count(); cur_level++) 
+			{
+				if (playerstats [cur_player] [cur_level].place != 1) 
+				{
+					is_king = false;
+					break;
+				}
+			}
+			if (is_king) 
+			{
+				return cur_player;
+			}
+		}
+		return -1;
 	}
 	
 	// Use this for initialization

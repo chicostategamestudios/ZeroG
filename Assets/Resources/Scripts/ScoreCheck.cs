@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
 using System.Collections.Generic;
 
 public class ScoreCheck : MonoBehaviour {
@@ -44,13 +45,23 @@ public class ScoreCheck : MonoBehaviour {
 	public Sprite wizard;
 	public Sprite knight;
 	public Sprite pirate;
+	Dictionary<int, string> trophies;
+	Text P1TrophyText;
+	Text P2TrophyText;
+	Text P3TrophyText;
+	Text P4TrophyText;
+	ScoreSystem stats;
 
 	// Use this for initialization
 	void Start () {
-	
+		/*for (int i = 1; i <= 4; i++) 
+		{
+			trophies.Add (i, "No Trophy");
+		}*/
 	}
 
 	void CheckScore(){
+		AssignTrophy ();
 		int first;
 		int second;
 		int third;
@@ -115,68 +126,68 @@ public class ScoreCheck : MonoBehaviour {
 			//player1
 			if (player1Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				firstPlace.text = player1Score+" Points";
+				firstPlace.text = player1Score+" Points ";
 			} else if (player1Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				secondPlace.text = player1Score+" Points";
+				secondPlace.text = player1Score+" Points ";
 			} else if (player1Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				thirdPlace.text = player1Score+" Points";
+				thirdPlace.text = player1Score+" Points ";
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				fourthPlace.text = player1Score+" Points";
+				fourthPlace.text = player1Score+" Points ";
 			}
 			//player2
 			if (player2Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = wizard;
-				firstPlace.text = player2Score+" Points";
+				firstPlace.text = player2Score+" Points ";
 			} else if (player2Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = wizard;
-				secondPlace.text = player2Score+" Points";
+				secondPlace.text = player2Score+" Points ";
 			} else if (player2Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = wizard;
-				thirdPlace.text = player2Score+" Points";
+				thirdPlace.text = player2Score+" Points ";
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = wizard;
-				fourthPlace.text = player2Score+" Points";
+				fourthPlace.text = player2Score+" Points ";
 			}
 			//player3
 			if (player3Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = knight;
-				firstPlace.text = player3Score+" Points";
+				firstPlace.text = player3Score+" Points ";
 			} else if (player3Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = knight;
-				secondPlace.text = player3Score+" Points";
+				secondPlace.text = player3Score+" Points ";
 			} else if (player3Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = knight;
-				thirdPlace.text = player3Score+" Points";
+				thirdPlace.text = player3Score+" Points ";
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = knight;
-				fourthPlace.text = player3Score+" Points";
+				fourthPlace.text = player3Score+" Points ";
 			}
 			//player4
 			if (player4Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = pirate;
-				firstPlace.text = player4Score+" Points";
+				firstPlace.text = player4Score+" Points ";
 			} else if (player4Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = pirate;
-				secondPlace.text = player4Score+" Points";
+				secondPlace.text = player4Score+" Points ";
 			} else if (player4Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = pirate;
-				thirdPlace.text = player4Score+" Points";
+				thirdPlace.text = player4Score+" Points ";
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = pirate;
-				fourthPlace.text = player4Score+" Points";
+				fourthPlace.text = player4Score+" Points ";
 			}
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player1Score+" Points";
-		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player2Score+" Points";
-		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points";
-		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points";
+		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player1Score+" Points " + trophies[1];
+		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player2Score+" Points " + trophies[2];
+		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points " + trophies[3];
+		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points " + trophies[4];
 	}
 	void OnEnable()
 	{
@@ -194,4 +205,31 @@ public class ScoreCheck : MonoBehaviour {
 			CheckScore ();
 		}
 	}
+
+	//Assign each player a trophy
+	void AssignTrophy()
+	{
+		for (int i = 1; i <= 4; i++) 
+		{
+			trophies[i] = "No Trophy";
+		}
+		/*
+		//Clumsy - Most Deaths
+		trophies.Add(stats.MostTotalDeaths(), "Clumsy - Most Deaths");
+		//Slowpoke - Slowest Time: Insert Time Here
+		float slowtime = 0;
+		trophies.Add(stats.SlowestTime(ref slowtime), "Slowpoke - Slowest Time: ");
+		//Flash - Fastest Time
+		float fasttime = 0;
+		trophies.Add (stats.FastestTime (ref fasttime), "Flash - Fastest Time: ");
+		//King - Finished First on All Maps
+		if (stats.King () != -1) 
+		{
+			trophies.Add (stats.King (), "King - Finished First on ALL Maps");
+		}
+		////Note to self: Not sure if slowtime updates from pass by reference before string is appened. Need to test. -Brandon
+		////Note to self: Ask Phil if there is a time conversion function already made. -B
+		*/
+	}
+		
 }
