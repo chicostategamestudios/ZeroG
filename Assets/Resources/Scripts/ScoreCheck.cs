@@ -213,11 +213,11 @@ public class ScoreCheck : MonoBehaviour {
 	void AssignTrophy()
 	{
 		for (int i = 1; i <= 4; i++) {
-			trophies [i] = "Hello world";
+			trophies [i] = "No Trophy";
 		}
 
 		//Clumsy - Most Deaths
-		//trophies [stats.MostTotalDeaths()] = "Clumsy - Most Deaths";
+		trophies [stats.MostTotalDeaths()] = "Clumsy - Most Deaths";
 		//Slowpoke - Slowest Time: Insert Time Here
 		//float slowtime = 0;
 		//trophies.Add(stats.SlowestTime(ref slowtime), "Slowpoke - Slowest Time: ");
