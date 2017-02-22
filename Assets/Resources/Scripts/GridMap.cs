@@ -1,6 +1,4 @@
-﻿// Zero G - Created by: Thaddeus Thompson - Last Modified: Thaddeus Thompson 2/9/2017
-
-using UnityEngine;
+﻿using UnityEngine;
 //using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,12 +7,12 @@ using UnityEngine.UI;
 
 public class GridMap : MonoBehaviour {
 
-	public static GridMap S;
 
 	[Tooltip("Drag your level image here to test")]public Texture2D map; //must be RW enabled and a TGA file
+	public int[,] colMap;
     private bool generateArray = false;
 	public GameObject smallAsteroid;
-    //private GameObject bouncePad;
+    private GameObject bouncePad;
 	private GameObject xSpawn;
 	private GameObject bSpawn;
 	private GameObject ySpawn;
@@ -42,6 +40,12 @@ public class GridMap : MonoBehaviour {
 	private Color mineSpot = new Color32(0,255,255,255);
 	private Color gateSpot = new Color32 (150, 90, 0, 255);
 	private Color bounce = new Color32 (120, 50, 0, 255);
+
+	private List<GameObject> mines = new List<GameObject> ();
+	private int mineCount = 0;
+
+	private List<GameObject> bouncePads = new List<GameObject> ();
+	private int bounceCount = 0;
 
 	private List<GameObject> asteroids = new List<GameObject>();
 	private List<MeshRenderer> asteroidRenders = new List<MeshRenderer>();
@@ -82,12 +86,12 @@ public class GridMap : MonoBehaviour {
 	private int playerNum;
 	//private GameObject level;
 	private bool gameStart;
-	[HideInInspector]public bool playing = false;
+	[HideInInspector] public bool playing = false;
 	//private bool playMusic;
 
 
+
 	void Awake(){
-		S = this;
 		//public GameObject bouncePad;
 		xSpawn = Resources.Load("Prefabs/Spawn_X") as GameObject;
 		bSpawn = Resources.Load("Prefabs/Spawn_B") as GameObject;
@@ -95,6 +99,7 @@ public class GridMap : MonoBehaviour {
 		aSpawn = Resources.Load("Prefabs/Spawn_A") as GameObject;
 		goal = Resources.Load("Prefabs/Goal") as GameObject;
 		spaceMine = Resources.Load("Prefabs/Bomb_Asteroid") as GameObject;
+		bouncePad = Resources.Load("Prefabs/Bounce") as GameObject;
 		//movingAsteroid;
 
 	}
@@ -125,6 +130,7 @@ public class GridMap : MonoBehaviour {
 		if (!GameOptions.player4) {
 			p4.SetActive (false);
 		}
+			
     }
 
 
@@ -132,7 +138,7 @@ public class GridMap : MonoBehaviour {
 		yield return new WaitForSeconds(startTimer);
 		foreach(MeshRenderer rend in asteroidRenders){
 			rend.enabled = false;
-			Debug.Log("rend off");
+			//Debug.Log("rend off");
 		}
 		text.text = "Choose Your Launch Pad!";
 
@@ -191,20 +197,22 @@ public class GridMap : MonoBehaviour {
         {
             int xSize = map.width;
             int ySize = map.height;
+			//Debug.Log (xSize);
+			//Debug.Log (ySize);
+
+			colMap = new int[xSize, ySize];
 			//Color32[] pix = map.GetPixels32 ();
            // Vector2[] mapObjPos = new Vector2[xSize * ySize];
            // int[] mapObjs = new int[xSize * ySize];
-		
-            Debug.Log(xSize);
 
             for (int horrizontalPixels = 0; horrizontalPixels < xSize; horrizontalPixels++)
             {
                 for (int verticalPixels = 0; verticalPixels < ySize; verticalPixels++)
                 {
-
-					if (map.GetPixel(horrizontalPixels, verticalPixels) == bSpawnSpot)  
-					{
-
+                    if (map.GetPixel(horrizontalPixels, verticalPixels) == bSpawnSpot)
+                    {
+                        colMap[horrizontalPixels, verticalPixels] = 0;
+                        SpawnControl.S.getB(horrizontalPixels, verticalPixels);
                         //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
 
                         Instantiate(bSpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(90, 0, 0));
@@ -212,50 +220,79 @@ public class GridMap : MonoBehaviour {
                     else if (map.GetPixel(horrizontalPixels, verticalPixels) == xSpawnSpot)
                     {
                         //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        colMap[horrizontalPixels, verticalPixels] = 0;
+                        SpawnControl.S.getX(horrizontalPixels, verticalPixels);
 
                         Instantiate(xSpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(90, 0, 0));
                     }
                     else if (map.GetPixel(horrizontalPixels, verticalPixels) == aSpawnSpot)
                     {
                         //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        colMap[horrizontalPixels, verticalPixels] = 0;
+                        SpawnControl.S.getA(horrizontalPixels, verticalPixels);
 
                         Instantiate(aSpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(-90, 0, 0));
                     }
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == ySpawnSpot)
+                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == ySpawnSpot)
                     {
                         //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        colMap[horrizontalPixels, verticalPixels] = 0;
+                        SpawnControl.S.getY(horrizontalPixels, verticalPixels);
 
                         Instantiate(ySpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(90, 0, 0));
                     }
                     else if (map.GetPixel(horrizontalPixels, verticalPixels) == goalSpot)
                     {
                         //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-
+                        colMap[horrizontalPixels, verticalPixels] = 100;
                         Instantiate(goal, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity);
                     }
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == asteroidSpot)
-					{
-						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-						GameObject sa;
-						sa = Instantiate(smallAsteroid, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
-						asteroids.Add(sa);
-					}
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.clear)
-					{
-						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-						//wGameObject la;
-						//la = Instantiate(bouncePad, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
-						//asteroids.Add(la);
-					}
-					else if (map.GetPixel(horrizontalPixels, verticalPixels) == mineSpot)
-					{
+                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == asteroidSpot)
+                    {
                         //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        colMap[horrizontalPixels, verticalPixels] = 200;
+                        GameObject sa;
+                        sa = Instantiate(smallAsteroid, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+                        asteroids.Add(sa);
+                    }
+                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.clear)
+                    {
+                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        //wGameObject la;
+                        //la = Instantiate(bouncePad, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+                        //asteroids.Add(la);
+                        colMap[horrizontalPixels, verticalPixels] = 0;
+                        //Debug.Log("ppooo");
+                    }
+                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == mineSpot)
+                    {
+                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+                        colMap[horrizontalPixels, verticalPixels] = 300 + mineCount;
                         GameObject sm;
                         sm = Instantiate(spaceMine, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
                         asteroids.Add(sm);
+                        mines.Add(sm);
+                        Bomb_Asteroid tmp = sm.GetComponent<Bomb_Asteroid>();
+                        tmp.GetListing(mineCount, horrizontalPixels, verticalPixels, gameObject);
+                        mineCount++;
                     }
+                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == bounce)
+                    {
+                        colMap[horrizontalPixels, verticalPixels] = 400 + bounceCount;
+                        GameObject sm;
+						sm = Instantiate(bouncePad, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+                        asteroids.Add(sm);
+                        bouncePads.Add(sm);
+                        BouncePad tmp = sm.GetComponent<BouncePad>();
+                        tmp.GetListing(bounceCount, horrizontalPixels, verticalPixels, gameObject);
+                        bounceCount++;
+                    } else if (horrizontalPixels == 0 || horrizontalPixels == map.width - 1 || verticalPixels == 0 || verticalPixels == map.height - 1) {
+						colMap [horrizontalPixels, verticalPixels] = 000;
+					} else {
+						colMap [horrizontalPixels, verticalPixels] = 0;
+					}
 	
-					Debug.Log(map.GetPixel(horrizontalPixels, verticalPixels));
+					//Debug.Log(map.GetPixel(horrizontalPixels, verticalPixels));
                 
                     // mapObjPos[horrizontalPixels * ySize + verticalPixels] = new Vector2(horrizontalPixels, verticalPixels);
                 }
@@ -277,6 +314,8 @@ public class GridMap : MonoBehaviour {
 		if (findingPlayers) {
 			FindPlayers ();
 		}
+
+
 
 		if (!playing) {
 			if (gameStart) {
@@ -315,7 +354,7 @@ public class GridMap : MonoBehaviour {
                         B.GetComponent<SpriteRenderer>().enabled = false;
                         Y.GetComponent<SpriteRenderer>().enabled = false;
                         X.GetComponent<SpriteRenderer>().enabled = false;
-                        Debug.Log("game start");
+                        //Debug.Log("game start");
                         foreach (MeshRenderer rend in asteroidRenders){
 							rend.enabled = true;
 						}
@@ -403,4 +442,27 @@ public class GridMap : MonoBehaviour {
 		}
 	
 	}//end Update
+
+	public int getPos(int x, int y){
+		return colMap [x, y];
+	}
+
+	public void BlowMine(int index){
+		Bomb_Asteroid b = mines [index].GetComponent<Bomb_Asteroid> ();
+		b.Explode ();
+	}
+
+    public int hitPad(int index)
+    {
+        BouncePad b = bouncePads[index].GetComponent<BouncePad>();
+        return b.GetDirection();
+    }
+
+	public int getWidth(){
+		return map.width;
+	}
+
+	public int getHeight(){
+		return map.height;
+	}
 }

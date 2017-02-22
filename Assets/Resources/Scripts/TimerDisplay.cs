@@ -1,8 +1,7 @@
-﻿// Zero G - Created by: Zachary Coon - Last Modified: Thaddeus Thompson 2/9/2017
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TimerDisplay : MonoBehaviour {
 
@@ -10,18 +9,20 @@ public class TimerDisplay : MonoBehaviour {
 
 	public float timer = 0.0f;
     public bool startTimer = false;
+
 	// Use this for initialization
 	void Start () {
+
 		MyTimerText = this.GetComponent<Text>();
 	
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		startTimer = GridMap.S.playing;
+		startTimer = GameObject.FindGameObjectWithTag ("Map").GetComponent<GridMap> ().playing;
         if (startTimer) {
             timer += Time.deltaTime;
-            MyTimerText.text = TimeToString();
+			MyTimerText.text = TimeToString()+SceneManager.GetActiveScene().name;
         }
 	}
 

@@ -8,6 +8,12 @@ public class BouncePad : MonoBehaviour {
 	public int direction;
 	public float timer = 10;
 	public float reset = 5;
+
+	int num;
+	int posX;
+	int posY;
+	GridMap map;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -27,21 +33,32 @@ public class BouncePad : MonoBehaviour {
 	void Rotate(){
 		direction = Random.Range (1, 5);
 		if(direction == 1){
-			transform.rotation = Quaternion.Euler(0,0,0);
-			timer = reset;
-		}
-		if(direction == 2){
 			transform.rotation = Quaternion.Euler(0,90,0);
 			timer = reset;
 		}
-		if(direction == 3){
-			transform.rotation = Quaternion.Euler(0,180,0);
-			timer = reset;
-		}
-		if(direction == 4){
+		if(direction == 2){
 			transform.rotation = Quaternion.Euler(0,270,0);
 			timer = reset;
 		}
+		if(direction == 3){
+			transform.rotation = Quaternion.Euler(0,0,0);
+			timer = reset;
+		}
+		if(direction == 4){
+			transform.rotation = Quaternion.Euler(0,180,0);
+			timer = reset;
+		}
+	}
+
+	public int GetDirection(){
+		return direction;
+	}
+
+	public void GetListing(int count, int xPos, int yPos, GameObject m){
+		num = count;
+		posX = xPos;
+		posY = yPos;
+		map = m.GetComponent<GridMap> ();
 	}
 
 	//When the player hits this object Player transform equals this object

@@ -1,6 +1,4 @@
-﻿// Zero G - Created by: Thaddeus Thompson - Last Modified: 
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -42,114 +40,114 @@ public class Goal : MonoBehaviour
         DragScoreSystemHere = FindObjectOfType<GameOptions>();
     }
 
-    void OnTriggerEnter(Collider col)
-    {
-        nextGame = true;
-        if (endGame == false)
-        {
 
-            if (col.gameObject.tag == "Player1")
-            {
-                p1Win = true;
-                endGame = true;
-                ScoreSystem.Instance.player1Score += 5;
-                textField.text = "Green Wins!!!";
-                //score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
-            }
+	public void Win(int pNum){
+		nextGame = true;
+		if (endGame == false)
+		{
 
-            if (col.gameObject.tag == "Player2")
-            {
-                p2Win = true;
-                endGame = true;
-                ScoreSystem.Instance.player2Score += 5;
-                textField.text = "Red Wins!!!";
-                //score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
-            }
+			if (pNum == 0)
+			{
+				p1Win = true;
+				endGame = true;
+				ScoreSystem.Instance.player1Score += 5;
+				textField.text = "Green Wins!!!";
+				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
+			}
 
-            if (col.gameObject.tag == "Player3")
-            {
-                p3Win = true;
-                endGame = true;
-                ScoreSystem.Instance.player3Score += 5;
-                textField.text = "Purple Wins!!!";
-                //score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
-            }
+			if (pNum == 1)
+			{
+				p2Win = true;
+				endGame = true;
+				ScoreSystem.Instance.player2Score += 5;
+				textField.text = "Red Wins!!!";
+				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
+			}
 
-            if (col.gameObject.tag == "Player4")
-            {
-                p4Win = true;
-                endGame = true;
-                ScoreSystem.Instance.player4Score += 5;
-                textField.text = "Blue Wins!!!";
-                //score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
-            }
+			if (pNum == 2)
+			{
+				p3Win = true;
+				endGame = true;
+				ScoreSystem.Instance.player3Score += 5;
+				textField.text = "Purple Wins!!!";
+				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
+			}
 
-            if (endGame)
-            {
-                timer.startTimer = false;
-            }
-        }
+			if (pNum == 3)
+			{
+				p4Win = true;
+				endGame = true;
+				ScoreSystem.Instance.player4Score += 5;
+				textField.text = "Blue Wins!!!";
+				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
+			}
 
-        if (endGame == true)
-        {
+			if (endGame)
+			{
+				timer.startTimer = false;
+			}
+		}
 
-            if (col.gameObject.tag == "Player1" && p1Win == false && secondPlace == false)
-            {
-                p1Win = true;
-                secondPlace = true;
-                ScoreSystem.Instance.player1Score += 3;
-            }
+		if (endGame == true)
+		{
 
-            if (col.gameObject.tag == "Player2" && p2Win == false && secondPlace == false)
-            {
-                p2Win = true;
-                secondPlace = true;
-                ScoreSystem.Instance.player2Score += 3;
-            }
+			if (pNum == 0 && p1Win == false && secondPlace == false)
+			{
+				p1Win = true;
+				secondPlace = true;
+				ScoreSystem.Instance.player1Score += 3;
+			}
 
-            if (col.gameObject.tag == "Player3" && p3Win == false && secondPlace == false)
-            {
-                p3Win = true;
-                secondPlace = true;
-                ScoreSystem.Instance.player3Score += 1;
-            }
+			if (pNum == 1 && p2Win == false && secondPlace == false)
+			{
+				p2Win = true;
+				secondPlace = true;
+				ScoreSystem.Instance.player2Score += 3;
+			}
 
-            if (col.gameObject.tag == "Player4" && p4Win == false && secondPlace == false)
-            {
-                p4Win = true;
-                secondPlace = true;
-                ScoreSystem.Instance.player4Score += 3;
-            }
-        }
+			if (pNum == 2 && p3Win == false && secondPlace == false)
+			{
+				p3Win = true;
+				secondPlace = true;
+				ScoreSystem.Instance.player3Score += 1;
+			}
 
-        if (endGame == true)
-        {
+			if (pNum == 3 && p4Win == false && secondPlace == false)
+			{
+				p4Win = true;
+				secondPlace = true;
+				ScoreSystem.Instance.player4Score += 3;
+			}
+		}
 
-            if (col.gameObject.tag == "Player1" && p1Win == false && secondPlace == true)
-            {
-                p1Win = true;
-                ScoreSystem.Instance.player1Score += 1;
-            }
+		if (endGame == true)
+		{
 
-            if (col.gameObject.tag == "Player2" && p2Win == false && secondPlace == true)
-            {
-                p2Win = true;
-                ScoreSystem.Instance.player2Score += 1;
-            }
+			if (pNum == 0 && p1Win == false && secondPlace == true)
+			{
+				p1Win = true;
+				ScoreSystem.Instance.player1Score += 1;
+			}
 
-            if (col.gameObject.tag == "Player3" && p3Win == false && secondPlace == true)
-            {
-                p3Win = true;
-                ScoreSystem.Instance.player3Score += 1;
-            }
+			if (pNum == 1 && p2Win == false && secondPlace == true)
+			{
+				p2Win = true;
+				ScoreSystem.Instance.player2Score += 1;
+			}
 
-            if (col.gameObject.tag == "Player4" && p4Win == false && secondPlace == true)
-            {
-                p4Win = true;
-                ScoreSystem.Instance.player4Score += 1;
-            }
-        }
-    }
+			if (pNum == 2 && p3Win == false && secondPlace == true)
+			{
+				p3Win = true;
+				ScoreSystem.Instance.player3Score += 1;
+			}
+
+			if (pNum == 3 && p4Win == false && secondPlace == true)
+			{
+				p4Win = true;
+				ScoreSystem.Instance.player4Score += 1;
+			}
+		}
+	}
 
     void Update()
     {
@@ -158,6 +156,7 @@ public class Goal : MonoBehaviour
             endTime -= Time.deltaTime;
             if (endTime < 0)
             {
+				PlayerController.S.StartNewLevel ();
                 endGameTimerGameObject.SetActive(false);
                 SceneManager.LoadScene("PlayerStanding");
                 levelTimer -= Time.deltaTime;

@@ -1,8 +1,7 @@
-﻿// Zero G - Created by: Zachary Coon - Last Modified: Thaddeus Thompson 2/2/2017
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameOptions : MonoBehaviour {
 
@@ -16,6 +15,11 @@ public class GameOptions : MonoBehaviour {
     public static int maxLevels;
     public static int levelsCompleted;
 
+	Image p1Icon;
+	Image p2Icon;
+	Image p3Icon;
+	Image p4Icon;
+	bool iconsDealt = true;
 
     // Use this for initialization
 
@@ -65,18 +69,22 @@ public class GameOptions : MonoBehaviour {
                     //print(levelName);
                     levelsPlayed[randomNumber - 1] = true;
 					SceneManager.LoadScene(randomNumber);
+
                     found = true;
                 }
+
             }
             levelsCompleted++;
         } else
         {
             SceneManager.LoadScene("Victory");
         }
+		//SceneManager.LoadScene ("practice");
     }
 
 	public void Update(){
-		if(SceneManager.GetActiveScene().name == "Victory"){
+		string sceneName = SceneManager.GetActiveScene ().name;
+		if(sceneName == "Victory"){
 			if(Input.GetButtonDown("A_P1")){
 				levelsCompleted = 0;
 				ScoreSystem.Instance.player1Score = 0;
@@ -88,6 +96,32 @@ public class GameOptions : MonoBehaviour {
 
 			if(Input.GetButtonDown("B_P1")){
 				SceneManager.LoadScene("GameStart");
+			}
+		} else if(sceneName != "GameStart"){
+			GameObject tmp;
+			tmp = GameObject.FindGameObjectWithTag ("exploIcon");
+			p1Icon = tmp.GetComponent<Image> ();
+
+			tmp = GameObject.FindGameObjectWithTag ("wizIcon");
+			p2Icon = tmp.GetComponent<Image> ();
+
+			tmp = GameObject.FindGameObjectWithTag ("kniIcon");
+			p3Icon = tmp.GetComponent<Image> ();
+
+			tmp = GameObject.FindGameObjectWithTag ("pirIcon");
+			p4Icon = tmp.GetComponent<Image> ();
+
+			if (!player1) {
+				p1Icon.enabled = false;
+			}
+			if (!player2) {
+				p2Icon.enabled = false;
+			}
+			if (!player3) {
+				p3Icon.enabled = false;
+			}
+			if (!player4) {
+				p4Icon.enabled = false;
 			}
 		}
 	}

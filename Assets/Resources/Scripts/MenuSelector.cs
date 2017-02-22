@@ -68,7 +68,7 @@ public class MenuSelector : MonoBehaviour {
 
 
 
-        if (Input.GetButton("A_P1"))
+        if (Input.GetButtonDown("A_P1"))
         {
 			if (selector == 0) {
 				starter.SetupGame ();
@@ -101,7 +101,8 @@ public class MenuSelector : MonoBehaviour {
         {
 			if (selector == 0) {
 				starter.SetupGame ();
-			} /*else if (selector < 3) {
+                this.gameObject.SetActive(false);
+            } /*else if (selector < 3) {
 				SceneManager.LoadScene (levels [selector]);
 			}*/
             else

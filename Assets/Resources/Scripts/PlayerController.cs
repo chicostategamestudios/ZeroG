@@ -1,12 +1,17 @@
-﻿// Zero G - Created by: Thaddeus Thompson - Last Modified: Thaddeus Thompson
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
 
 	public static PlayerController S;
+	[Tooltip("Sprite Renderer from child")]
+	public SpriteRenderer sr;
+	[Tooltip("its own meshrenderer")]
+	public MeshRenderer mr;
+
+	Image scoreIcon;
 
 	private bool stopped = true;
 	public float movementSpeed = 17f;
@@ -34,8 +39,16 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 forward;
 	private float rotateSpeed = 130f;
 
+	private int[] playerPos;
+	GridMap map;
+	int respawn = 0;
+	public int[] respawnPos;
+	int x = 0;
+	int y = 0;
+	bool finished = false;
+
         // Use this for initialization
-        void Awake () {
+	void Awake () {
 		up = new Vector3(0,yUp,0);
 		S = this;
 		inMenu = true;
@@ -43,343 +56,169 @@ public class PlayerController : MonoBehaviour {
 		charCont = GetComponent<CharacterController> ();
 		myParticle = GetComponentInChildren<ParticleSystem>();
         myCollider = GetComponent<BoxCollider>();
-        }
+		playerPos = new int[2];
+		respawnPos = new int[2];
+		GameObject tmp = GameObject.FindGameObjectWithTag ("exploreScore");
+		scoreIcon = tmp.GetComponent<Image> ();
+		scoreIcon.enabled = false;
+	}
 
 
     // Update is called once per frame
     void FixedUpdate()
     {
-		if ((charCont.collisionFlags & CollisionFlags.Sides) != 0) {
-			Debug.Log ("front bash");
-			stopped = true;
-		}
-		forward = this.transform.TransformDirection (Vector3.forward);
-		/*Vector3 up = new Vector3 (0, yUp, 0);
+		if (!finished) {
+			if ((charCont.collisionFlags & CollisionFlags.Sides) != 0) {
+				Debug.Log ("front bash");
+				//stopped = true;
+			}
+			forward = this.transform.TransformDirection (Vector3.forward);
+			/*Vector3 up = new Vector3 (0, yUp, 0);
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * length;
 		Debug.DrawRay (transform.position + up, forward, Color.green, 100);*/
-		GetInput();
-		if(speedTimer > 0){
-			speedTimer -= Time.deltaTime;
-		}
-		if(speedTimer < 0){
-			speedTimer = 0;
-		}
-        //Gets player input for spawn location
-        //Use  Spawn_XYAB(Clone) becuase that is how Unity decides to name them when instantiating
-        if (inMenu && playerReady == false) {
-			if(Input.GetButtonDown("A_P1") && SpawnControl.S.spawnA == false){
-				spawnPoint = GameObject.Find("Spawn_A(Clone)");
-				SpawnControl.S.spawnA = true;
-				transform.position = spawnPoint.transform.position;
-				spawnPoint.GetComponent<SpriteRenderer>().enabled = false;
-				playerReady = true;
+			GetInput ();
+			if (speedTimer > 0) {
+				speedTimer -= Time.deltaTime;
 			}
-			if(Input.GetButtonDown("B_P1") && SpawnControl.S.spawnB == false){
-				spawnPoint = GameObject.Find("Spawn_B(Clone)");
-				SpawnControl.S.spawnB = true;
-				transform.position = spawnPoint.transform.position;
-				spawnPoint.SetActive (false);
-				playerReady = true;
+			if (speedTimer < 0) {
+				speedTimer = 0;
 			}
-			if(Input.GetButtonDown("X_P1") && SpawnControl.S.spawnX == false){
-				spawnPoint = GameObject.Find("Spawn_X(Clone)");
-				SpawnControl.S.spawnX = true;
-				transform.position = spawnPoint.transform.position;
-				spawnPoint.SetActive (false);
-				playerReady = true;
-			}
-			if(Input.GetButtonDown("Y_P1") && SpawnControl.S.spawnY == false){
-				spawnPoint = GameObject.Find("Spawn_Y(Clone)");
-				SpawnControl.S.spawnY = true;
-				transform.position = spawnPoint.transform.position;
-				spawnPoint.SetActive (false);
-				playerReady = true;
-			}
-		}
+			//Gets player input for spawn location
+			//Use  Spawn_XYAB(Clone) becuase that is how Unity decides to name them when instantiating
+			if (inMenu && playerReady == false) {
+				int[] tmp = new int[2];
+				if (Input.GetButtonDown ("A_P1") && SpawnControl.S.spawnA == false) {
+					//Debug.Log("poo");
+					spawnPoint = GameObject.Find ("Spawn_A(Clone)");
+					SpawnControl.S.spawnA = true;
+					tmp = SpawnControl.S.giveA ();
+					playerPos [0] = tmp [0];
+					playerPos [1] = tmp [1];
+					respawnPos [0] = playerPos [0];
+					respawnPos [1] = playerPos [1];
+					transform.position = spawnPoint.transform.position;
+					spawnPoint.GetComponent<SpriteRenderer> ().enabled = false;
+					playerReady = true;
 
-		if (SceneManager.GetActiveScene ().name == "PlayerStanding") {
-			if (inputDirection == 3) {
-				transform.Rotate (Vector3.forward * (rotateSpeed * Time.deltaTime));
-			} else if (inputDirection == 4) {
-				transform.Rotate (Vector3.back * (rotateSpeed * Time.deltaTime));
-			}
-			inputDirection = 0;
-		}
+					respawn = 0;
+					GameObject gm = GameObject.FindGameObjectWithTag ("Map");
+					map = gm.GetComponent<GridMap> ();
+				}
+				if (Input.GetButtonDown ("B_P1") && SpawnControl.S.spawnB == false) {
+					spawnPoint = GameObject.Find ("Spawn_B(Clone)");
+					SpawnControl.S.spawnB = true;
+					tmp = SpawnControl.S.giveB ();
+					playerPos [0] = tmp [0];
+					playerPos [1] = tmp [1];
+					respawnPos [0] = playerPos [0];
+					respawnPos [1] = playerPos [1];
+					;
+					transform.position = spawnPoint.transform.position;
+					spawnPoint.SetActive (false);
+					playerReady = true;
 
-        //Check if game has started and if player is stopped
-        if (stopped == true && inMenu == false) {
-			speedUp = 0;
-			//up
-			if (lastDirection == 3) {
-				transform.rotation = Quaternion.Euler (0, 0, 0);
+					respawn = 1;
+					GameObject gm = GameObject.FindGameObjectWithTag ("Map");
+					map = gm.GetComponent<GridMap> ();
+				}
+				if (Input.GetButtonDown ("X_P1") && SpawnControl.S.spawnX == false) {
+					spawnPoint = GameObject.Find ("Spawn_X(Clone)");
+					SpawnControl.S.spawnX = true;
+					tmp = SpawnControl.S.giveX ();
+					playerPos [0] = tmp [0];
+					playerPos [1] = tmp [1];
+					respawnPos [0] = playerPos [0];
+					respawnPos [1] = playerPos [1];
+					transform.position = spawnPoint.transform.position;
+					spawnPoint.SetActive (false);
+					playerReady = true;
+
+					respawn = 2;
+					GameObject gm = GameObject.FindGameObjectWithTag ("Map");
+					map = gm.GetComponent<GridMap> ();
+				}
+				if (Input.GetButtonDown ("Y_P1") && SpawnControl.S.spawnY == false) {
+					spawnPoint = GameObject.Find ("Spawn_Y(Clone)");
+					SpawnControl.S.spawnY = true;
+					tmp = SpawnControl.S.giveY ();
+					playerPos [0] = tmp [0];
+					playerPos [1] = tmp [1];
+					respawnPos [0] = playerPos [0];
+					respawnPos [1] = playerPos [1];
+					transform.position = spawnPoint.transform.position;
+					spawnPoint.SetActive (false);
+					playerReady = true;
+
+					respawn = 3;
+					GameObject gm = GameObject.FindGameObjectWithTag ("Map");
+					map = gm.GetComponent<GridMap> ();
+				}
+			}
+
+			if (SceneManager.GetActiveScene ().name == "PlayerStanding") {
+				if (inputDirection == 3) {
+					transform.Rotate (Vector3.forward * (rotateSpeed * Time.deltaTime));
+				} else if (inputDirection == 4) {
+					transform.Rotate (Vector3.back * (rotateSpeed * Time.deltaTime));
+				}
+				inputDirection = 0;
+			}
+
+			//Check if game has started and if player is stopped
+			if (stopped == true && inMenu == false) {
+				speedUp = 0;
+
+				//up
+				if (lastDirection == 3) {
+					y = 1;
+					x = 0;
+					transform.rotation = Quaternion.Euler (0, 0, 0);
                 
-            }
-			//right
-			if (lastDirection == 1) {
-				transform.rotation = Quaternion.Euler (0, 90, 0);
+				}
+				//right
+				if (lastDirection == 1) {
+					y = 0;
+					x = 1;
+					transform.rotation = Quaternion.Euler (0, 90, 0);
                 
-            }
-			//down
-			if (lastDirection == 4) {
-				transform.rotation = Quaternion.Euler (0, 180, 0);
+				}
+				//down
+				if (lastDirection == 4) {
+					y = -1;
+					x = 0;
+					transform.rotation = Quaternion.Euler (0, 180, 0);
                 
-            }
-			//left
-			if (lastDirection == 2) {
-				transform.rotation = Quaternion.Euler (0, -90, 0);
+				}
+				//left
+				if (lastDirection == 2) {
+					y = 0;
+					x = -1;
+					transform.rotation = Quaternion.Euler (0, -90, 0);
                 
-            }
+				}
 
-			//If not facing asteroid player starts moving
-			if (Input.GetButton("A_P1") && hitAsteroid == false) {
-				stopped = false;
+				//If not facing asteroid player starts moving
+				if (Input.GetButton ("A_P1")/* && hitAsteroid == false*/) {
+					stopped = false;
+				}
+
+			}
+			arrayCollision (x, y);
+
+			//Manual respawn
+			if (playerReady) {
+				if (Input.GetButtonDown ("X_P1")) {
+					myParticle.Play ();
+					Die ();
+					/*this.transform.position = spawnPoint.transform.position;
+					stopped = true;*/
+				}
 			}
 
 		}
-
-
- //=============================Collision System ==================================   
-        //3 raycast one projects from the back left corner 
-        //One from center back 
-        //one from right back corner of the player 
-        //(for each direction)
-
-        //if any of them detect an astroid
-        //then find the raycast that has the shortest distance between point and end of raycast
-        //find the point on the raycast, subtract the distance between that point
-        //and the end of the raycast (and the orgin to the end of the collider) and
-        //move that distance.
-        //Else, just move the full distance
-
-        RaycastHit hit;
-        float shortest_distance = 0f;
-        int rays_hit = 0;
-        //==========================UP===========================
-        if(lastDirection == 3) {
-            if (Physics.Raycast(transform.position, Vector3.forward, out hit, 2f))
-            {
-                Debug.DrawLine(transform.position, hit.point);
-                //if a raycast hits, then record if it's the shortest distance
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-
-                //Add one to ray hits if it hits an astriod (This will be used to tell the ship to stop later)
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x - .75f, transform.position.y, transform.position.z),
-                Vector3.forward, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x - .75f, transform.position.y, transform.position.z), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x + .95f, transform.position.y, transform.position.z),
-                Vector3.forward, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x + .95f, transform.position.y, transform.position.z), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-        }
-
-        //==========================DOWN===========================
-        if (lastDirection == 4)
-        {
-            if (Physics.Raycast(transform.position, -Vector3.forward, out hit, 2f))
-            {
-                Debug.DrawLine(transform.position, hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3 (transform.position.x + .75f, transform.position.y, transform.position.z),
-                -Vector3.forward, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x + .75f, transform.position.y, transform.position.z), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x - .95f, transform.position.y, transform.position.z),
-                -Vector3.forward, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x - .95f, transform.position.y, transform.position.z), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-        }
-
-        //==========================LEFT===========================
-        if (lastDirection == 2)
-        {
-            if (Physics.Raycast(transform.position, Vector3.left, out hit, 2f))
-            {
-                Debug.DrawLine(transform.position, hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x , transform.position.y, transform.position.z - .75f),
-                Vector3.left, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x , transform.position.y, transform.position.z - .75f), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x , transform.position.y, transform.position.z + .95f),
-                Vector3.left, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x , transform.position.y, transform.position.z + .95f), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-        }
-
-        //==========================RIGHT===========================
-        if (lastDirection == 1)
-        {
-            if (Physics.Raycast(transform.position, Vector3.right, out hit, 2f))
-            {
-                Debug.DrawLine(transform.position, hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y, transform.position.z + .75f),
-                Vector3.right, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x, transform.position.y, transform.position.z + .75f), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-            if (Physics.Raycast(new Vector3(transform.position.x , transform.position.y, transform.position.z - .95f),
-                Vector3.right, out hit, 2f))
-            {
-                Debug.DrawLine(new Vector3(transform.position.x , transform.position.y, transform.position.z - .95f), hit.point);
-                if (shortest_distance > hit.distance)
-                {
-                    Debug.Log("Hit");
-                    shortest_distance = hit.distance;
-                }
-                if (hit.transform.tag == "asteroid")
-                {
-                    rays_hit++;
-                }
-            }
-        }
-
-        //if there is a hit, then don't move the ship (And don't move the ship, if there happens to be a hit)
-        if(rays_hit != 0)
-        {
-            stopped = true;
-            hitAsteroid = true;
-        } else
-        {
-            hitAsteroid = false;
-        }
-
-        //if the ship is more than it's own body away from an object, than move closer before stopping
-        if(shortest_distance > 1)
-        {
-            charCont.Move(transform.forward * Time.deltaTime * (shortest_distance - 1));
-        }
-        
-//=============================END OF COLLISION==============================
-
-        //If player is moving set speed and increase as time passes
-        if (stopped == false) {
-			if (speedTimer == 0 && speedUp < maxSpeed) {
-				speedUp += speedMult;
-				speedTimer = coolDown;
-			}
-			//transform.position += transform.forward * Time.deltaTime * (movementSpeed + speedUp);
-
-			charCont.Move (transform.forward * Time.deltaTime * (movementSpeed + speedUp));
-		}
-
-		//Manual respawn
-		if (playerReady) {
-			if(Input.GetButtonDown("X_P1")){
-				myParticle.Play();
-				this.transform.position = spawnPoint.transform.position;
-				stopped = true;
-			}
-		}
-
-    
 }
+
+
 
 	void GetInput() //gets input for playerDirection
 	{
@@ -417,58 +256,81 @@ public class PlayerController : MonoBehaviour {
         }
 	}
     
-    void OnTriggerEnter(Collider col)
-    {
-      /*  if (col.gameObject.tag == "asteroid")
-        {
-			if(Physics.Raycast (transform.position + up, forward, length, layerMask)){
-            	stopped = true;
-				hitAsteroid = true;
-			}else{
-				hitAsteroid = false;
-				stopped = false;
+    
+	void Die(){
+		CameraShake.S.shakeDuration = .5f;
+		myParticle.Play();
+		this.transform.position = spawnPoint.transform.position;
+		stopped = true;
+		playerPos [0] = respawnPos [0];
+		playerPos [1] = respawnPos [1];
+
+	}
+		
+	/** int x and y are the variables for the direction you are moving, betwen -1 and 1 **/
+
+	void arrayCollision(int x, int y){
+		if (!stopped) {
+			//
+			if (playerPos [0] + x >= 0 && playerPos [0] + x < map.getWidth ()) {
+				if (playerPos [1] + y >= 0 && playerPos [1] + y < map.getHeight ()) {
+					int check = map.getPos (playerPos [0] + x, playerPos [1] + y);
+                    //Debug.Log(check);
+                    if (check / 100 == 0)
+                    { // empty space
+                        playerPos[0] += x;
+                        playerPos[1] += y;
+                        charCont.Move(transform.forward);
+                        //stopped = false;
+                    }
+                    else if (check / 100 == 1)
+                    { // goal
+                        HitGoal();
+                    }
+                    else if (check / 100 == 3)
+                    { // mine
+                        map.BlowMine(check % 100);
+                        Die();
+                    }
+                    else if (check / 100 == 5)
+                    {
+						lastDirection = map.hitPad(check % 100);
+                    }
+                    else
+                    { // asteroid
+                        stopped = true;
+                    }
+				} else { // outside of bounds of map
+					//stopped = true;
+					Die();
+				}
+			} else { //outside of bounds of map
+				//stopped = true;
+				Die();
 			}
-        } */
 
-        if (col.transform.tag == "wall")
-        {
-			CameraShake.S.shakeDuration = .5f;
-			myParticle.Play();
-            this.transform.position = spawnPoint.transform.position;
-            stopped = true;
-        }
+		}
 
-        if (col.transform.tag == "seamine")
-        {
-            CameraShake.S.shakeDuration = .5f;
-            myParticle.Play();
-            this.transform.position = spawnPoint.transform.position;
-            stopped = true;
-        }
-
-    }
-
-	void OnTriggerExit(Collider col){
-		//hitAsteroid = false;
 	}
 
-	void OnTriggerStay(Collider col){
-		/*if (col.gameObject.tag == "asteroid") {
-			
-			if(Physics.Raycast (transform.position + up, forward, length, layerMask)){
-				stopped = true;
-				hitAsteroid = true;
-			}else{
-				hitAsteroid = false;
-			}
-		}*/
-        if (col.gameObject.tag == "goal")
-        {
-            stopped = true;
-			hitAsteroid = true;
-            
-        }
-    }
-    
-        
+	void HitGoal(){
+		stopped = true;
+		hitAsteroid = true;
+		GameObject tmp = GameObject.FindGameObjectWithTag ("goal");
+		Goal g = tmp.GetComponent<Goal> ();
+		g.Win (0);
+
+		sr.enabled = false;
+		mr.enabled = false;
+		scoreIcon.enabled = true;
+		finished = true;
+	}
+
+	public void StartNewLevel(){
+		finished = false;
+		sr.enabled = true;
+		mr.enabled = true;
+		scoreIcon.enabled = false;
+	}
+		   
 }
