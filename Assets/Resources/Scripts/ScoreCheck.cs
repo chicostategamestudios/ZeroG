@@ -81,6 +81,10 @@ public class ScoreCheck : MonoBehaviour {
 		second = scores.Max ();
 		third = scores.Min ();
 
+		//if (player_score == first) {
+		//	player_object.transform.position = 
+		//}
+
 		if(SceneManager.GetActiveScene().name == "PlayerStanding"){
 			//player1
 			if (player1Score == first) {
@@ -123,65 +127,39 @@ public class ScoreCheck : MonoBehaviour {
 				p4.transform.position = p4FourthPlace.transform.position;
 			}
 		}else{
+
 			//player1
-			if (player1Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				firstPlace.text = player1Score+" Points " + trophies[1];
-			} else if (player1Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				secondPlace.text = player1Score+" Points " + trophies[1];
-			} else if (player1Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				thirdPlace.text = player1Score+" Points " + trophies[1];
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				fourthPlace.text = player1Score+" Points " + trophies[1];
-			}
-			//player2
-			if (player2Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = wizard;
-				firstPlace.text = player2Score+" Points " + trophies[2];
-			} else if (player2Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = wizard;
-				secondPlace.text = player2Score+" Points " + trophies[2];
-			} else if (player2Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = wizard;
-				thirdPlace.text = player2Score+" Points " + trophies[2];
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = wizard;
-				fourthPlace.text = player2Score+" Points " + trophies[2];
-			}
-			//player3
-			if (player3Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = knight;
-				firstPlace.text = player3Score+" Points " + trophies[3];
-			} else if (player3Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = knight;
-				secondPlace.text = player3Score+" Points " + trophies[3];
-			} else if (player3Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = knight;
-				thirdPlace.text = player3Score+" Points " + trophies[3];
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = knight;
-				fourthPlace.text = player3Score+" Points " + trophies[3];
-			}
-			//player4
-			if (player4Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = pirate;
-				firstPlace.text = player4Score+" Points " + trophies[4];
-			} else if (player4Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = pirate;
-				secondPlace.text = player4Score+" Points " + trophies[4];
-			} else if (player4Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = pirate;
-				thirdPlace.text = player4Score+" Points " + trophies[4];
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = pirate;
-				fourthPlace.text = player4Score+" Points " + trophies[4];
-			}
+			DisplayScoreSprite(1, player1Score, adventurer, first, second, third);
+			DisplayScoreSprite(2, player2Score, wizard, first, second, third);
+			DisplayScoreSprite(3, player3Score, knight, first, second, third);
+			DisplayScoreSprite(4, player4Score, pirate, first, second, third);
 		}
 	}
-	
+
+	void DisplayScoreSprite(int player_number, int player_score, Sprite player_sprite, int first, int second, int third)
+	{
+		if (player_score == first) 
+		{
+			firstPlaceSprite.GetComponent<Image>().sprite = player_sprite;
+			firstPlace.text = player_score + " Points " + trophies [player_number];
+		}
+		else if (player_score == second) 
+		{
+			secondPlaceSprite.GetComponent<Image>().sprite = player_sprite;
+			secondPlace.text = player_score + " Points " + trophies [player_number];
+		}
+		else if (player_score == third) 
+		{
+			thirdPlaceSprite.GetComponent<Image>().sprite = player_sprite;
+			thirdPlace.text = player_score + " Points " + trophies [player_number];
+		}
+		else
+		{
+			fourthPlaceSprite.GetComponent<Image>().sprite = player_sprite;
+			fourthPlace.text = player_score + " Points " + trophies [player_number];
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (SceneManager.GetActiveScene ().name == "PlayerStanding") 
@@ -217,7 +195,7 @@ public class ScoreCheck : MonoBehaviour {
 		}
 
 		//Clumsy - Most Deaths
-		trophies [stats.MostTotalDeaths()] = "Clumsy - Most Deaths";
+		//trophies [stats.MostTotalDeaths()] = "Clumsy - Most Deaths";
 		//Slowpoke - Slowest Time: Insert Time Here
 		//float slowtime = 0;
 		//trophies.Add(stats.SlowestTime(ref slowtime), "Slowpoke - Slowest Time: ");
