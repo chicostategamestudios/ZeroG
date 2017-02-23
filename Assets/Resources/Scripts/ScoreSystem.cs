@@ -28,7 +28,7 @@ public class ScoreSystem : MonoBehaviour {
 		//What place did they finish (1st place, 2nd place, etc.). Should be between 1 and max # of players. 
 		public int place;
 	}
-	List< List<levelstats> > playerstats = new List< List<levelstats> >();
+	public List< List<levelstats> > playerstats = new List< List<levelstats> >();
 	
 	//Increase the death count of argument int player in argument int level. 
 	public void IncreaseDeath(int level, int player)

@@ -81,10 +81,6 @@ public class ScoreCheck : MonoBehaviour {
 		second = scores.Max ();
 		third = scores.Min ();
 
-		//if (player_score == first) {
-		//	player_object.transform.position = 
-		//}
-
 		if(SceneManager.GetActiveScene().name == "PlayerStanding"){
 			//player1
 			if (player1Score == first) {
@@ -136,6 +132,7 @@ public class ScoreCheck : MonoBehaviour {
 		}
 	}
 
+	//Function used in CheckScore function to change which sprites to display where based on score
 	void DisplayScoreSprite(int player_number, int player_score, Sprite player_sprite, int first, int second, int third)
 	{
 		if (player_score == first) 
@@ -193,9 +190,10 @@ public class ScoreCheck : MonoBehaviour {
 		for (int i = 1; i <= 4; i++) {
 			trophies [i] = "No Trophy";
 		}
-
 		//Clumsy - Most Deaths
-		//trophies [stats.MostTotalDeaths()] = "Clumsy - Most Deaths";
+		//int player = ScoreSystem.Instance.MostTotalDeaths();
+		//trophies [player] = "Clumsy - Most Deaths";
+		//NEED TO GET DEATH TRACKING WORKING
 		//Slowpoke - Slowest Time: Insert Time Here
 		//float slowtime = 0;
 		//trophies.Add(stats.SlowestTime(ref slowtime), "Slowpoke - Slowest Time: ");
