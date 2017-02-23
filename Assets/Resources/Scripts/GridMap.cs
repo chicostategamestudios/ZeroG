@@ -454,8 +454,10 @@ public class GridMap : MonoBehaviour {
 
     public int hitPad(int index)
     {
+		int lastDir;
         BouncePad b = bouncePads[index].GetComponent<BouncePad>();
-        return b.GetDirection();
+		lastDir = b.GetDirection ();
+        return lastDir;
     }
 
 	public int getWidth(){

@@ -51,6 +51,7 @@ public class BouncePad : MonoBehaviour {
 	}
 
 	public int GetDirection(){
+		//Vector3 rotation = transform.rotation;
 		return direction;
 	}
 

@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour {
 	private float speedUp;
 	public float speedMult = 5.8f;
 	public float maxSpeed = 18.3f;
-	private float lastDirection;
+	public float lastDirection;
 	private float inputDirection;
 
 	public bool inMenu;
@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 forward;
 	private float rotateSpeed = 130f;
 
-	private int[] playerPos;
+	public int[] playerPos;//private
 	GridMap map;
 	int respawn = 0;
 	public int[] respawnPos;
@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour {
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * length;
 		Debug.DrawRay (transform.position + up, forward, Color.green, 100);*/
 			GetInput ();
+			//CheckDirection ();
 			if (speedTimer > 0) {
 				speedTimer -= Time.deltaTime;
 			}
@@ -203,7 +204,7 @@ public class PlayerController : MonoBehaviour {
 				}
 
 			}
-			arrayCollision (x, y);
+			arrayCollision ();
 
 			//Manual respawn
 			if (playerReady) {
@@ -256,6 +257,48 @@ public class PlayerController : MonoBehaviour {
         }
 	}
     
+	void CheckDirection(){
+		//Check if game has started and if player is stopped
+		if (stopped == true && inMenu == false) {
+			speedUp = 0;
+
+			//up
+			if (lastDirection == 3) {
+				y = 1;
+				x = 0;
+				transform.rotation = Quaternion.Euler (0, 0, 0);
+
+			}
+			//right
+			if (lastDirection == 1) {
+				y = 0;
+				x = 1;
+				transform.rotation = Quaternion.Euler (0, 90, 0);
+
+			}
+			//down
+			if (lastDirection == 4) {
+				y = -1;
+				x = 0;
+				transform.rotation = Quaternion.Euler (0, 180, 0);
+
+			}
+			//left
+			if (lastDirection == 2) {
+				y = 0;
+				x = -1;
+				transform.rotation = Quaternion.Euler (0, -90, 0);
+
+			}
+
+			//If not facing asteroid player starts moving
+			//if (Input.GetButton ("A_P1")/* && hitAsteroid == false*/) {
+			//	stopped = false;
+			//}
+
+		}
+		//arrayCollision ();
+	}
     
 	void Die(){
 		CameraShake.S.shakeDuration = .5f;
@@ -269,7 +312,7 @@ public class PlayerController : MonoBehaviour {
 		
 	/** int x and y are the variables for the direction you are moving, betwen -1 and 1 **/
 
-	void arrayCollision(int x, int y){
+	void arrayCollision(){
 		if (!stopped) {
 			//
 			if (playerPos [0] + x >= 0 && playerPos [0] + x < map.getWidth ()) {
@@ -292,9 +335,17 @@ public class PlayerController : MonoBehaviour {
                         map.BlowMine(check % 100);
                         Die();
                     }
-                    else if (check / 100 == 5)
+                    else if (check / 100 == 4)
                     {
+						Debug.Log ("bounce");
+						charCont.Move(transform.forward);
+						playerPos[0] += x;
+						playerPos[1] += y;
 						lastDirection = map.hitPad(check % 100);
+						stopped = true;
+						CheckDirection ();
+						stopped = false;
+						//charCont.Move(transform.forward);
                     }
                     else
                     { // asteroid
