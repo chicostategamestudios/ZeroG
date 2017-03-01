@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class SceneTransition : MonoBehaviour {
-    int timer;
+    [HideInInspector]public int timer;
     public Text timerText;
     bool started = false;
 
