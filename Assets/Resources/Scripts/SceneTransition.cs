@@ -15,8 +15,10 @@ public class SceneTransition : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-    void Update() {
-
+    void FixedUpdate() {
+		if (Input.GetButton ("A_P1")) {
+			timer = 3;
+		}
     }
     void startTimer() {
         
