@@ -180,6 +180,7 @@ public class ScoreCheck : MonoBehaviour {
 		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points";
 		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points";
 
+
 		if (timer.GetComponent<SceneTransition> ().timer <= 3) {
 			exit.transform.Translate(Vector3.right * (speed*Time.deltaTime));
 		}

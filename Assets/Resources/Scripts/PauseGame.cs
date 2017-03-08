@@ -9,16 +9,19 @@ public class PauseGame : MonoBehaviour {
 	void Start () {
 		paused = false;
 		pauseScreen = GameObject.Find ("startMenu");
-		pauseScreen.SetActive (false);
+		if (SceneManager.GetActiveScene().name != "GameStart") {
+			pauseScreen.SetActive (false);
+		}
 	}
 	
-	// Update is called once per frame
+	// Check if the players hit start during play
 	void Update () {			
-			if (Input.GetButtonDown ("Start")) {
+		if (Input.GetButtonDown ("Start") && SceneManager.GetActiveScene().name != "GameStart") {
 				Pause ();
 			}
 	}
 
+	//When game is paused turns on startScreen in canvas and sets timescale to 0
 	public void Pause(){
 		if (!paused) {
 			pauseScreen.SetActive (true);

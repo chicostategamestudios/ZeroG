@@ -257,6 +257,48 @@ public class PlayerController4 : MonoBehaviour {
 		}
 	}
 
+	void CheckDirection(){
+		//Check if game has started and if player is stopped
+		if (stopped == true && inMenu == false) {
+			speedUp = 0;
+
+			//up
+			if (lastDirection == 3) {
+				y = 1;
+				x = 0;
+				transform.rotation = Quaternion.Euler (0, 0, 0);
+
+			}
+			//right
+			if (lastDirection == 1) {
+				y = 0;
+				x = 1;
+				transform.rotation = Quaternion.Euler (0, 90, 0);
+
+			}
+			//down
+			if (lastDirection == 4) {
+				y = -1;
+				x = 0;
+				transform.rotation = Quaternion.Euler (0, 180, 0);
+
+			}
+			//left
+			if (lastDirection == 2) {
+				y = 0;
+				x = -1;
+				transform.rotation = Quaternion.Euler (0, -90, 0);
+
+			}
+
+			//If not facing asteroid player starts moving
+			//if (Input.GetButton ("A_P1")/* && hitAsteroid == false*/) {
+			//	stopped = false;
+			//}
+
+		}
+		//arrayCollision ();
+	}
 
 	void Die(){
 		CameraShake.S.shakeDuration = .5f;
@@ -286,7 +328,17 @@ public class PlayerController4 : MonoBehaviour {
 					} else if (check / 100 == 3) { // mine
 						map.BlowMine (check % 100);
 						Die ();
-					} else { // asteroid
+					} else if (check / 100 == 4){
+						Debug.Log ("bounce");
+						charCont.Move(transform.forward);
+						playerPos[0] += x;
+						playerPos[1] += y;
+						lastDirection = map.hitPad(check % 100);
+						stopped = true;
+						CheckDirection ();
+						stopped = false;
+						//charCont.Move(transform.forward);
+					}else { // asteroid
 						stopped = true;
 					}
 				} else { // outside of bounds of map
