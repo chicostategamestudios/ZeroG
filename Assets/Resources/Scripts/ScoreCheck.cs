@@ -173,10 +173,12 @@ public class ScoreCheck : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player1Score+" Points";
-		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player2Score+" Points";
-		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points";
-		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points";
+		if (SceneManager.GetActiveScene ().name == "PlayerStanding") {
+			p1Score.GetComponent<TextMesh> ().text = "" + ScoreSystem.Instance.player1Score + " Points";
+			p2Score.GetComponent<TextMesh> ().text = "" + ScoreSystem.Instance.player2Score + " Points";
+			p3Score.GetComponent<TextMesh> ().text = "" + ScoreSystem.Instance.player3Score + " Points";
+			p4Score.GetComponent<TextMesh> ().text = "" + ScoreSystem.Instance.player4Score + " Points";
+		}
 	}
 	void OnEnable()
 	{
