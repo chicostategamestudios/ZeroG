@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour {
 	int x = 0;
 	int y = 0;
 	bool finished = false;
+	bool paused = false;
+	private GameObject pauseTmp;
 
         // Use this for initialization
 	void Awake () {
@@ -59,19 +61,18 @@ public class PlayerController : MonoBehaviour {
 		playerPos = new int[2];
 		respawnPos = new int[2];
 		GameObject tmp = GameObject.FindGameObjectWithTag ("exploreScore");
+		pauseTmp = GameObject.Find ("Main Camera");
 		scoreIcon = tmp.GetComponent<Image> ();
 		scoreIcon.enabled = false;
 	}
 
-
+	void Update(){
+		paused = pauseTmp.GetComponent<PauseGame> ().paused;
+	}
     // Update is called once per frame
     void FixedUpdate()
     {
 		if (!finished) {
-			if ((charCont.collisionFlags & CollisionFlags.Sides) != 0) {
-				Debug.Log ("front bash");
-				//stopped = true;
-			}
 			forward = this.transform.TransformDirection (Vector3.forward);
 			/*Vector3 up = new Vector3 (0, yUp, 0);
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * length;
@@ -86,7 +87,7 @@ public class PlayerController : MonoBehaviour {
 			}
 			//Gets player input for spawn location
 			//Use  Spawn_XYAB(Clone) becuase that is how Unity decides to name them when instantiating
-			if (inMenu && playerReady == false) {
+			if (inMenu && playerReady == false && paused == false) {
 				int[] tmp = new int[2];
 				if (Input.GetButtonDown ("A_P1") && SpawnControl.S.spawnA == false) {
 					//Debug.Log("poo");

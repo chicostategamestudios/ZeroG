@@ -3,8 +3,9 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class PauseGame : MonoBehaviour {
-	private bool paused;
+	[HideInInspector]public bool paused;
 	private GameObject pauseScreen;
+
 	// Use this for initialization
 	void Start () {
 		paused = false;
