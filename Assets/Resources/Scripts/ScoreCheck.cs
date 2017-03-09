@@ -44,13 +44,19 @@ public class ScoreCheck : MonoBehaviour {
 	public Sprite wizard;
 	public Sprite knight;
 	public Sprite pirate;
+	public GameObject exit;
+	public float speed;
 
+	private GameObject timer;
 	// Use this for initialization
 	void Start () {
-	
+		timer = GameObject.Find ("transition");
 	}
 
-	void CheckScore(){
+
+	
+	// Update is called once per frame
+	void FixedUpdate () {
 		int first;
 		int second;
 		int third;
@@ -73,43 +79,43 @@ public class ScoreCheck : MonoBehaviour {
 		if(SceneManager.GetActiveScene().name == "PlayerStanding"){
 			//player1
 			if (player1Score == first) {
-				p1.transform.position = p1FirstPlace.transform.position;
+				p1.transform.position = Vector3.MoveTowards(p1.transform.position, p1FirstPlace.position,(speed*Time.deltaTime));
 			} else if (player1Score == second) {
-				p1.transform.position = p1SecondPlace.transform.position;
+				p1.transform.position = Vector3.MoveTowards(p1.transform.position, p1SecondPlace.position,(speed*Time.deltaTime));
 			} else if (player1Score == third) {
-				p1.transform.position = p1ThirdPlace.transform.position;
+				p1.transform.position = Vector3.MoveTowards(p1.transform.position, p1ThirdPlace.position,(speed*Time.deltaTime));
 			} else {
-				p1.transform.position = p1FourthPlace.transform.position;
+				p1.transform.position = Vector3.MoveTowards(p1.transform.position, p1FourthPlace.position,(speed*Time.deltaTime));
 			}
 			//player2
 			if (player2Score == first) {
-				p2.transform.position = p2FirstPlace.transform.position;
+				p2.transform.position = Vector3.MoveTowards(p2.transform.position, p2FirstPlace.position,(speed*Time.deltaTime));
 			} else if (player2Score == second) {
-				p2.transform.position = p2SecondPlace.transform.position;
+				p2.transform.position = Vector3.MoveTowards(p2.transform.position, p2SecondPlace.position,(speed*Time.deltaTime));
 			} else if (player2Score == third) {
-				p2.transform.position = p2ThirdPlace.transform.position;
+				p2.transform.position = Vector3.MoveTowards(p2.transform.position, p2ThirdPlace.position,(speed*Time.deltaTime));
 			} else {
-				p2.transform.position = p2FourthPlace.transform.position;
+				p2.transform.position = Vector3.MoveTowards(p2.transform.position, p2FourthPlace.position,(speed*Time.deltaTime));
 			}
 			//player3
 			if (player3Score == first) {
-				p3.transform.position = p3FirstPlace.transform.position;
+				p3.transform.position = Vector3.MoveTowards(p3.transform.position, p3FirstPlace.position,(speed*Time.deltaTime));
 			} else if (player3Score == second) {
-				p3.transform.position = p3SecondPlace.transform.position;
+				p3.transform.position = Vector3.MoveTowards(p3.transform.position, p3SecondPlace.position,(speed*Time.deltaTime));
 			} else if (player3Score == third) {
-				p3.transform.position = p3ThirdPlace.transform.position;
+				p3.transform.position = Vector3.MoveTowards(p3.transform.position, p3ThirdPlace.position,(speed*Time.deltaTime));
 			} else {
-				p3.transform.position = p3FourthPlace.transform.position;
+				p3.transform.position = Vector3.MoveTowards(p3.transform.position, p3FourthPlace.position,(speed*Time.deltaTime));
 			}
 			//player4
 			if (player4Score == first) {
-				p4.transform.position = p4FirstPlace.transform.position;
+				p4.transform.position = Vector3.MoveTowards(p4.transform.position, p4FirstPlace.position,(speed*Time.deltaTime));
 			} else if (player4Score == second) {
-				p4.transform.position = p4SecondPlace.transform.position;
+				p4.transform.position = Vector3.MoveTowards(p4.transform.position, p4SecondPlace.position,(speed*Time.deltaTime));
 			} else if (player4Score == third) {
-				p4.transform.position = p4ThirdPlace.transform.position;
+				p4.transform.position = Vector3.MoveTowards(p4.transform.position, p4ThirdPlace.position,(speed*Time.deltaTime));
 			} else {
-				p4.transform.position = p4FourthPlace.transform.position;
+				p4.transform.position = Vector3.MoveTowards(p4.transform.position, p4FourthPlace.position,(speed*Time.deltaTime));
 			}
 		}else{
 			//player1
@@ -169,29 +175,15 @@ public class ScoreCheck : MonoBehaviour {
 				fourthPlace.text = player4Score+" Points";
 			}
 		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
 		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player1Score+" Points";
 		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player2Score+" Points";
 		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points";
 		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points";
-	}
-	void OnEnable()
-	{
-		SceneManager.sceneLoaded += OnLevelFinishedLoading;
-	}
 
-	void OnDisable()
-	{
-		SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-	}
 
-	void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-	{
-		if (SceneManager.GetActiveScene ().name == "PlayerStanding" || SceneManager.GetActiveScene().name == "Victory") {
-			CheckScore ();
+		if (timer.GetComponent<SceneTransition> ().timer <= 3) {
+			exit.transform.Translate(Vector3.right * (speed*Time.deltaTime));
 		}
 	}
+		
 }

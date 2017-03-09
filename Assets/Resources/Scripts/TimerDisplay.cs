@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TimerDisplay : MonoBehaviour {
 
@@ -18,9 +19,10 @@ public class TimerDisplay : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		startTimer = GameObject.FindGameObjectWithTag ("Map").GetComponent<GridMap> ().playing;
         if (startTimer) {
             timer += Time.deltaTime;
-            MyTimerText.text = TimeToString();
+			MyTimerText.text = TimeToString()+SceneManager.GetActiveScene().name;
         }
 	}
 

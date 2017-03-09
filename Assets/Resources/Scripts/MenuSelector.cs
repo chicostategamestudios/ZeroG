@@ -68,18 +68,28 @@ public class MenuSelector : MonoBehaviour {
 
 
 
-        if (Input.GetButton("A_P1"))
+        if (Input.GetButtonDown("A_P1"))
         {
-			if (selector == 0) {
-				starter.SetupGame ();
-				this.gameObject.SetActive (false);
-			}/* else if (selector < 3) {
+			if (SceneManager.GetActiveScene ().name == "GameStart") {
+				if (selector == 0) {
+					starter.SetupGame ();
+					this.gameObject.SetActive (false);
+				}/* else if (selector < 3) {
 				SceneManager.LoadScene (levels [selector]);
 			}*/
-			else if(selector == 3)
-			{
-				//EditorApplication.isPlaying = false;
-				Application.Quit();
+			else if (selector == 3) {
+					//EditorApplication.isPlaying = false;
+					Application.Quit ();
+				}
+			} else {
+				if (selector == 0) {
+					GameObject temp = GameObject.Find ("Main Camera");
+					temp.GetComponent<PauseGame> ().Pause ();
+					this.gameObject.SetActive (false);
+				}
+				else if (selector == 1) {
+					SceneManager.LoadScene ("GameStart");
+				}
 			}
         }
 
@@ -101,7 +111,8 @@ public class MenuSelector : MonoBehaviour {
         {
 			if (selector == 0) {
 				starter.SetupGame ();
-			} /*else if (selector < 3) {
+                this.gameObject.SetActive(false);
+            } /*else if (selector < 3) {
 				SceneManager.LoadScene (levels [selector]);
 			}*/
             else
@@ -115,34 +126,52 @@ public class MenuSelector : MonoBehaviour {
     //increments selector forward, changes text color and sprites
     void MoveForward()
     {
-		buttons[selector].GetComponent<Image>().sprite = inactive_button;
-        butt_texts[selector].color = inactive_text;
-        if (selector < 3)
-        {
-            selector++;
-        }
-        else
-        {
-            selector = 0;
-        }
-		buttons[selector].GetComponent<Image>().sprite = active_button;
-        butt_texts[selector].color = active_text;
+		if (SceneManager.GetActiveScene ().name == "GameStart") {
+			buttons [selector].GetComponent<Image> ().sprite = inactive_button;
+			butt_texts [selector].color = inactive_text;
+			if (selector < 3) {
+				selector++;
+			} else {
+				selector = 0;
+			}
+			buttons [selector].GetComponent<Image> ().sprite = active_button;
+			butt_texts [selector].color = active_text;
+		} else {
+			buttons [selector].GetComponent<Image> ().sprite = inactive_button;
+			butt_texts [selector].color = inactive_text;
+			if (selector < 1) {
+				selector++;
+			} else {
+				selector = 0;
+			}
+			buttons [selector].GetComponent<Image> ().sprite = active_button;
+			butt_texts [selector].color = active_text;
+		}
     }
 
     //increments selector backward, changes text color and sprites
     void MoveBack()
     {
-        butt_texts[selector].color = inactive_text;
-		buttons[selector].GetComponent<Image>().sprite = inactive_button;
-        if (selector > 0)
-        {
-            selector--;
-        }
-        else
-        {
-            selector = 3;
-        }
-		buttons[selector].GetComponent<Image>().sprite = active_button;
-        butt_texts[selector].color = active_text;
+		if (SceneManager.GetActiveScene ().name == "GameStart") {
+			butt_texts [selector].color = inactive_text;
+			buttons [selector].GetComponent<Image> ().sprite = inactive_button;
+			if (selector > 0) {
+				selector--;
+			} else {
+				selector = 3;
+			}
+			buttons [selector].GetComponent<Image> ().sprite = active_button;
+			butt_texts [selector].color = active_text;
+		} else {
+			butt_texts [selector].color = inactive_text;
+			buttons [selector].GetComponent<Image> ().sprite = inactive_button;
+			if (selector > 0) {
+				selector--;
+			} else {
+				selector = 1;
+			}
+			buttons [selector].GetComponent<Image> ().sprite = active_button;
+			butt_texts [selector].color = active_text;
+		}
     }
 }
