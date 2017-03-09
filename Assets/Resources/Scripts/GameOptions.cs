@@ -74,7 +74,9 @@ public class GameOptions : MonoBehaviour {
     }
 
 	public void Update(){
-		if(SceneManager.GetActiveScene().name == "Victory"){
+		if(SceneManager.GetActiveScene().name == "Victory")
+		{
+			
 			if(Input.GetButtonDown("A_P1")){
 				levelsCompleted = 0;
 				ScoreSystem.Instance.player1Score = 0;
@@ -87,6 +89,7 @@ public class GameOptions : MonoBehaviour {
 			if(Input.GetButtonDown("B_P1")){
 				SceneManager.LoadScene("GameStart");
 			}
+
 		}
 	}
 }
