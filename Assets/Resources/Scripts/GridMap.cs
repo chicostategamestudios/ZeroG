@@ -12,7 +12,7 @@ public class GridMap : MonoBehaviour {
 	public int[,] colMap;
     private bool generateArray = false;
 	public GameObject smallAsteroid;
-    private GameObject bouncePad;
+    //private GameObject bouncePad;
 	private GameObject xSpawn;
 	private GameObject bSpawn;
 	private GameObject ySpawn;
@@ -44,9 +44,6 @@ public class GridMap : MonoBehaviour {
 	private List<GameObject> mines = new List<GameObject> ();
 	private int mineCount = 0;
 
-	private List<GameObject> bouncePads = new List<GameObject> ();
-	private int bounceCount = 0;
-
 	private List<GameObject> asteroids = new List<GameObject>();
 	private List<MeshRenderer> asteroidRenders = new List<MeshRenderer>();
 
@@ -73,6 +70,8 @@ public class GridMap : MonoBehaviour {
 	public Sprite greenLit;
 	[Tooltip("Set time delay for level preview")]public float startTimer;
 
+	[Tooltip("Pathfinding prefab, used for level testing")] public GameObject finder;
+
 
 	private SpriteRenderer myOrange;
 	private SpriteRenderer myYellow;
@@ -86,12 +85,13 @@ public class GridMap : MonoBehaviour {
 	private int playerNum;
 	//private GameObject level;
 	private bool gameStart;
-	[HideInInspector] public bool playing = false;
+	private bool playing = false;
 	//private bool playMusic;
 
 
 
 	void Awake(){
+		Debug.Log ("awake");
 		//public GameObject bouncePad;
 		xSpawn = Resources.Load("Prefabs/Spawn_X") as GameObject;
 		bSpawn = Resources.Load("Prefabs/Spawn_B") as GameObject;
@@ -99,7 +99,6 @@ public class GridMap : MonoBehaviour {
 		aSpawn = Resources.Load("Prefabs/Spawn_A") as GameObject;
 		goal = Resources.Load("Prefabs/Goal") as GameObject;
 		spaceMine = Resources.Load("Prefabs/Bomb_Asteroid") as GameObject;
-		bouncePad = Resources.Load("Prefabs/Bounce") as GameObject;
 		//movingAsteroid;
 
 	}
@@ -193,100 +192,82 @@ public class GridMap : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 
-        if(generateArray == true)
-        {
-            int xSize = map.width;
-            int ySize = map.height;
+		if (generateArray == true) {
+			int xSize = map.width;
+			int ySize = map.height;
 			//Debug.Log (xSize);
 			//Debug.Log (ySize);
 
 			colMap = new int[xSize, ySize];
 			//Color32[] pix = map.GetPixels32 ();
-           // Vector2[] mapObjPos = new Vector2[xSize * ySize];
-           // int[] mapObjs = new int[xSize * ySize];
+			// Vector2[] mapObjPos = new Vector2[xSize * ySize];
+			// int[] mapObjs = new int[xSize * ySize];
 
-            for (int horrizontalPixels = 0; horrizontalPixels < xSize; horrizontalPixels++)
-            {
-                for (int verticalPixels = 0; verticalPixels < ySize; verticalPixels++)
-                {
-                    if (map.GetPixel(horrizontalPixels, verticalPixels) == bSpawnSpot)
-                    {
-                        colMap[horrizontalPixels, verticalPixels] = 0;
-                        SpawnControl.S.getB(horrizontalPixels, verticalPixels);
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+			for (int horrizontalPixels = 0; horrizontalPixels < xSize; horrizontalPixels++) {
+				for (int verticalPixels = 0; verticalPixels < ySize; verticalPixels++) {
+					if (map.GetPixel (horrizontalPixels, verticalPixels) == bSpawnSpot) {
+						colMap [horrizontalPixels, verticalPixels] = 0;
+						SpawnControl.S.getB (horrizontalPixels, verticalPixels);
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
 
-                        Instantiate(bSpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(90, 0, 0));
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == xSpawnSpot)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        colMap[horrizontalPixels, verticalPixels] = 0;
-                        SpawnControl.S.getX(horrizontalPixels, verticalPixels);
+						Instantiate (bSpawn, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.Euler (90, 0, 0));
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == xSpawnSpot) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						colMap [horrizontalPixels, verticalPixels] = 0;
+						SpawnControl.S.getX (horrizontalPixels, verticalPixels);
 
-                        Instantiate(xSpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(90, 0, 0));
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == aSpawnSpot)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        colMap[horrizontalPixels, verticalPixels] = 0;
-                        SpawnControl.S.getA(horrizontalPixels, verticalPixels);
+						Instantiate (xSpawn, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.Euler (90, 0, 0));
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == aSpawnSpot) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						colMap [horrizontalPixels, verticalPixels] = 0;
+						SpawnControl.S.getA (horrizontalPixels, verticalPixels);
+						Debug.Log (horrizontalPixels);
+						Debug.Log (verticalPixels);
 
-                        Instantiate(aSpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(-90, 0, 0));
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == ySpawnSpot)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        colMap[horrizontalPixels, verticalPixels] = 0;
-                        SpawnControl.S.getY(horrizontalPixels, verticalPixels);
+						Instantiate (aSpawn, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.Euler (-90, 0, 0));
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == ySpawnSpot) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						colMap [horrizontalPixels, verticalPixels] = 0;
+						SpawnControl.S.getY (horrizontalPixels, verticalPixels);
 
-                        Instantiate(ySpawn, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.Euler(90, 0, 0));
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == goalSpot)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        colMap[horrizontalPixels, verticalPixels] = 100;
-                        Instantiate(goal, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity);
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == asteroidSpot)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        colMap[horrizontalPixels, verticalPixels] = 200;
-                        GameObject sa;
-                        sa = Instantiate(smallAsteroid, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
-                        asteroids.Add(sa);
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == Color.clear)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        //wGameObject la;
-                        //la = Instantiate(bouncePad, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
-                        //asteroids.Add(la);
-                        colMap[horrizontalPixels, verticalPixels] = 0;
-                        //Debug.Log("ppooo");
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == mineSpot)
-                    {
-                        //  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
-                        colMap[horrizontalPixels, verticalPixels] = 300 + mineCount;
+						Instantiate (ySpawn, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.Euler (90, 0, 0));
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == goalSpot) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						colMap [horrizontalPixels, verticalPixels] = 100;
+						Instantiate (goal, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.identity);
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == asteroidSpot) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						colMap [horrizontalPixels, verticalPixels] = 200;
+						GameObject sa;
+						sa = Instantiate (smallAsteroid, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+						asteroids.Add (sa);
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == Color.clear) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						//wGameObject la;
+						//la = Instantiate(bouncePad, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+						//asteroids.Add(la);
+						colMap [horrizontalPixels, verticalPixels] = 0;
+						//Debug.Log("ppooo");
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == mineSpot) {
+						//  mapObjs[horrizontalPixels * ySize + verticalPixels] = 1;
+						colMap [horrizontalPixels, verticalPixels] = 300 + mineCount;
+						GameObject sm;
+						sm = Instantiate (spaceMine, new Vector3 (horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
+						asteroids.Add (sm);
+						mines.Add (sm);
+						Bomb_Asteroid tmp = sm.GetComponent<Bomb_Asteroid> ();
+						tmp.GetListing (mineCount, horrizontalPixels, verticalPixels, gameObject);
+						mineCount++;
+					} else if (map.GetPixel (horrizontalPixels, verticalPixels) == bounce) {
+						/*   colMap[horrizontalPixels, verticalPixels] = 500 + bounceCount;
                         GameObject sm;
                         sm = Instantiate(spaceMine, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
                         asteroids.Add(sm);
-                        mines.Add(sm);
-                        Bomb_Asteroid tmp = sm.GetComponent<Bomb_Asteroid>();
-                        tmp.GetListing(mineCount, horrizontalPixels, verticalPixels, gameObject);
-                        mineCount++;
-                    }
-                    else if (map.GetPixel(horrizontalPixels, verticalPixels) == bounce)
-                    {
-                        colMap[horrizontalPixels, verticalPixels] = 400 + bounceCount;
-                        GameObject sm;
-						sm = Instantiate(bouncePad, new Vector3(horrizontalPixels, 0, verticalPixels), Quaternion.identity) as GameObject;
-                        asteroids.Add(sm);
                         bouncePads.Add(sm);
                         BouncePad tmp = sm.GetComponent<BouncePad>();
-                        tmp.GetListing(bounceCount, horrizontalPixels, verticalPixels, gameObject);
-                        bounceCount++;
-                    } else if (horrizontalPixels == 0 || horrizontalPixels == map.width - 1 || verticalPixels == 0 || verticalPixels == map.height - 1) {
+                        tmp.GetListing(mineCount, horrizontalPixels, verticalPixels, gameObject);
+                        bounceCount++;*/
+					} else if (horrizontalPixels == 0 || horrizontalPixels == map.width - 1 || verticalPixels == 0 || verticalPixels == map.height - 1) {
 						colMap [horrizontalPixels, verticalPixels] = 000;
 					} else {
 						colMap [horrizontalPixels, verticalPixels] = 0;
@@ -294,22 +275,41 @@ public class GridMap : MonoBehaviour {
 	
 					//Debug.Log(map.GetPixel(horrizontalPixels, verticalPixels));
                 
-                    // mapObjPos[horrizontalPixels * ySize + verticalPixels] = new Vector2(horrizontalPixels, verticalPixels);
-                }
-            }
+					// mapObjPos[horrizontalPixels * ySize + verticalPixels] = new Vector2(horrizontalPixels, verticalPixels);
+				}
+			}
 
 
 
-            generateArray = false;
+			generateArray = false;
 
-            //Eww GameObject.Find
-            B = GameObject.Find("Spawn_B(Clone)");
-            X = GameObject.Find("Spawn_X(Clone)");
-            Y = GameObject.Find("Spawn_Y(Clone)");
-            A = GameObject.Find("Spawn_A(Clone)");
+			//Eww GameObject.Find
+			B = GameObject.Find ("Spawn_B(Clone)");
+			X = GameObject.Find ("Spawn_X(Clone)");
+			Y = GameObject.Find ("Spawn_Y(Clone)");
+			A = GameObject.Find ("Spawn_A(Clone)");
             
-            GetRenders();
-        }//end map generation
+			GetRenders ();
+		}//end map generation
+		else {
+			if (Input.GetKeyUp ("a")) {
+				//Debug.Log ("keyup");
+				showPaths (SpawnControl.S.giveX());
+			}
+			if (Input.GetKeyUp ("s")) {
+				//Debug.Log ("keyup");
+				showPaths (SpawnControl.S.giveY());
+			}
+			if (Input.GetKeyUp ("d")) {
+				//Debug.Log ("keyup");
+				showPaths (SpawnControl.S.giveA());
+			}
+			if (Input.GetKeyUp ("f")) {
+				//Debug.Log ("keyup");
+				showPaths (SpawnControl.S.giveB());
+			}
+
+		}
 
 		if (findingPlayers) {
 			FindPlayers ();
@@ -443,6 +443,16 @@ public class GridMap : MonoBehaviour {
 	
 	}//end Update
 
+	void showPaths(int[] location){
+		int x = location [0];
+		int z = location [1];
+
+		Vector3 pos = new Vector3 (x, 0, z);
+		GameObject tmp = Instantiate (finder, pos, gameObject.transform.rotation) as GameObject;
+		PathFinder pf = tmp.GetComponent<PathFinder> ();
+		pf.GetMap (colMap, map.width, map.height);
+	}
+
 	public int getPos(int x, int y){
 		return colMap [x, y];
 	}
@@ -452,14 +462,12 @@ public class GridMap : MonoBehaviour {
 		b.Explode ();
 	}
 
-    public int hitPad(int index)
+/*    public int hitPad(int index)
     {
-		int lastDir;
-        BouncePad b = bouncePads[index].GetComponent<BouncePad>();
-		lastDir = b.GetDirection ();
-        return lastDir;
+        BouncePad b = bouncePads[index].GetComponenet<BouncePad>();
+        return b.getDirection();
     }
-
+*/
 	public int getWidth(){
 		return map.width;
 	}

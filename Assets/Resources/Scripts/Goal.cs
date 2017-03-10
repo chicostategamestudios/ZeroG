@@ -125,24 +125,28 @@ public class Goal : MonoBehaviour
 
 			if (pNum == 0 && p1Win == false && secondPlace == true)
 			{
+				PlayerController.S.StartNewLevel ();
 				p1Win = true;
 				ScoreSystem.Instance.player1Score += 1;
 			}
 
 			if (pNum == 1 && p2Win == false && secondPlace == true)
 			{
+				PlayerController2.S.StartNewLevel ();
 				p2Win = true;
 				ScoreSystem.Instance.player2Score += 1;
 			}
 
 			if (pNum == 2 && p3Win == false && secondPlace == true)
 			{
+				PlayerController3.S.StartNewLevel ();
 				p3Win = true;
 				ScoreSystem.Instance.player3Score += 1;
 			}
 
 			if (pNum == 3 && p4Win == false && secondPlace == true)
 			{
+				PlayerController4.S.StartNewLevel ();
 				p4Win = true;
 				ScoreSystem.Instance.player4Score += 1;
 			}
@@ -156,7 +160,6 @@ public class Goal : MonoBehaviour
             endTime -= Time.deltaTime;
             if (endTime < 0)
             {
-				PlayerController.S.StartNewLevel ();
                 endGameTimerGameObject.SetActive(false);
                 SceneManager.LoadScene("PlayerStanding");
                 levelTimer -= Time.deltaTime;

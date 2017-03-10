@@ -14,6 +14,7 @@ public class SpawnControl : MonoBehaviour {
 	public int[] xLocation;
 	public int[] yLocation;
 
+
 	// Use this for initialization
 	void Start () {
 		S=this;
@@ -26,6 +27,8 @@ public class SpawnControl : MonoBehaviour {
 		bLocation = new int[2];
 		xLocation = new int[2];
 		yLocation = new int[2];
+
+
 	}
 
 	public void getA(int aX, int aY){

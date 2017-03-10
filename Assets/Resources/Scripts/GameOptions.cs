@@ -69,6 +69,7 @@ public class GameOptions : MonoBehaviour {
                     //print(levelName);
                     levelsPlayed[randomNumber - 1] = true;
 					SceneManager.LoadScene(randomNumber);
+					//SceneManager.LoadScene("practiceLevel");
 
                     found = true;
                 }

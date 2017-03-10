@@ -46,8 +46,6 @@ public class PlayerController2 : MonoBehaviour {
 	int y = 0;
 	bool finished = false;
 	Image scoreIcon;
-	bool paused = false;
-	private GameObject pauseTmp;
 
 
 	// Use this for initialization
@@ -62,18 +60,20 @@ public class PlayerController2 : MonoBehaviour {
 		playerPos = new int[2];
 		respawnPos = new int[2];
 		GameObject tmp = GameObject.FindGameObjectWithTag ("wizScore");
-		pauseTmp = GameObject.Find ("Main Camera");
 		scoreIcon = tmp.GetComponent<Image> ();
 		scoreIcon.enabled = false;
+
 	}
 
-	void Update(){
-		paused = pauseTmp.GetComponent<PauseGame> ().paused;
-	}
+
 	// Update is called once per frame
 	void FixedUpdate()
 	{
 		if (!finished) {
+			if ((charCont.collisionFlags & CollisionFlags.Sides) != 0) {
+				Debug.Log ("front bash");
+				//stopped = true;
+			}
 			forward = this.transform.TransformDirection (Vector3.forward);
 			/*Vector3 up = new Vector3 (0, yUp, 0);
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * length;
@@ -87,7 +87,7 @@ public class PlayerController2 : MonoBehaviour {
 			}
 			//Gets player input for spawn location
 			//Use  Spawn_XYAB(Clone) becuase that is how Unity decides to name them when instantiating
-			if (inMenu && playerReady == false && paused == false) {
+			if (inMenu && playerReady == false) {
 				int[] tmp = new int[2];
 				if (Input.GetButtonDown ("A_P2") && SpawnControl.S.spawnA == false) {
 					//Debug.Log("poo");
@@ -258,48 +258,6 @@ public class PlayerController2 : MonoBehaviour {
 		}
 	}
 
-	void CheckDirection(){
-		//Check if game has started and if player is stopped
-		if (stopped == true && inMenu == false) {
-			speedUp = 0;
-
-			//up
-			if (lastDirection == 3) {
-				y = 1;
-				x = 0;
-				transform.rotation = Quaternion.Euler (0, 0, 0);
-
-			}
-			//right
-			if (lastDirection == 1) {
-				y = 0;
-				x = 1;
-				transform.rotation = Quaternion.Euler (0, 90, 0);
-
-			}
-			//down
-			if (lastDirection == 4) {
-				y = -1;
-				x = 0;
-				transform.rotation = Quaternion.Euler (0, 180, 0);
-
-			}
-			//left
-			if (lastDirection == 2) {
-				y = 0;
-				x = -1;
-				transform.rotation = Quaternion.Euler (0, -90, 0);
-
-			}
-
-			//If not facing asteroid player starts moving
-			//if (Input.GetButton ("A_P1")/* && hitAsteroid == false*/) {
-			//	stopped = false;
-			//}
-
-		}
-		//arrayCollision ();
-	}
 
 	void Die(){
 		CameraShake.S.shakeDuration = .5f;
@@ -329,17 +287,7 @@ public class PlayerController2 : MonoBehaviour {
 					} else if (check / 100 == 3) { // mine
 						map.BlowMine (check % 100);
 						Die ();
-					} else if (check / 100 == 4){
-						Debug.Log ("bounce");
-						charCont.Move(transform.forward);
-						playerPos[0] += x;
-						playerPos[1] += y;
-						lastDirection = map.hitPad(check % 100);
-						stopped = true;
-						CheckDirection ();
-						stopped = false;
-						//charCont.Move(transform.forward);
-					}else { // asteroid
+					} else { // asteroid
 						stopped = true;
 					}
 				} else { // outside of bounds of map
