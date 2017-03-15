@@ -11,8 +11,8 @@ public class GridMap : MonoBehaviour {
 	[Tooltip("Drag your level image here to test")]public Texture2D map; //must be RW enabled and a TGA file
 	public int[,] colMap;
     private bool generateArray = false;
-	public GameObject smallAsteroid;
-    //private GameObject bouncePad;
+    private GameObject bouncePad;
+    public GameObject smallAsteroid;
 	private GameObject xSpawn;
 	private GameObject bSpawn;
 	private GameObject ySpawn;
@@ -44,7 +44,10 @@ public class GridMap : MonoBehaviour {
 	private List<GameObject> mines = new List<GameObject> ();
 	private int mineCount = 0;
 
-	private List<GameObject> asteroids = new List<GameObject>();
+    private List<GameObject> bouncePads = new List<GameObject>();
+    private int bounceCount = 0;
+
+    private List<GameObject> asteroids = new List<GameObject>();
 	private List<MeshRenderer> asteroidRenders = new List<MeshRenderer>();
 
 	//public StudioEventEmitter music;
@@ -99,9 +102,10 @@ public class GridMap : MonoBehaviour {
 		aSpawn = Resources.Load("Prefabs/Spawn_A") as GameObject;
 		goal = Resources.Load("Prefabs/Goal") as GameObject;
 		spaceMine = Resources.Load("Prefabs/Bomb_Asteroid") as GameObject;
-		//movingAsteroid;
+        bouncePad = Resources.Load("Prefabs/Bounce") as GameObject;
+        //movingAsteroid;
 
-	}
+    }
 
     // Use this for initialization
     void Start () {
@@ -462,13 +466,15 @@ public class GridMap : MonoBehaviour {
 		b.Explode ();
 	}
 
-/*    public int hitPad(int index)
+    public int hitPad(int index)
     {
-        BouncePad b = bouncePads[index].GetComponenet<BouncePad>();
-        return b.getDirection();
+        int lastDir;
+        BouncePad b = bouncePads[index].GetComponent<BouncePad>();
+        lastDir = b.GetDirection();
+        return lastDir;
     }
-*/
-	public int getWidth(){
+
+    public int getWidth(){
 		return map.width;
 	}
 
