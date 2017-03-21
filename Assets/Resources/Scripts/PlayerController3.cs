@@ -89,6 +89,8 @@ public class PlayerController3 : MonoBehaviour {
 			if (inMenu && playerReady == false && paused == false) {
 				int[] tmp = new int[2];
 				if (Input.GetButtonDown ("A_P3") && SpawnControl.S.spawnA == false) {
+					//FMOD
+					//Sound for spawn select
 					//Debug.Log("poo");
 					spawnPoint = GameObject.Find ("Spawn_A(Clone)");
 					SpawnControl.S.spawnA = true;
@@ -106,6 +108,8 @@ public class PlayerController3 : MonoBehaviour {
 					map = gm.GetComponent<GridMap> ();
 				}
 				if (Input.GetButtonDown ("B_P3") && SpawnControl.S.spawnB == false) {
+					//FMOD
+					//Sound for spawn select
 					spawnPoint = GameObject.Find ("Spawn_B(Clone)");
 					SpawnControl.S.spawnB = true;
 					tmp = SpawnControl.S.giveB ();
@@ -123,6 +127,8 @@ public class PlayerController3 : MonoBehaviour {
 					map = gm.GetComponent<GridMap> ();
 				}
 				if (Input.GetButtonDown ("X_P3") && SpawnControl.S.spawnX == false) {
+					//FMOD
+					//Sound for spawn select
 					spawnPoint = GameObject.Find ("Spawn_X(Clone)");
 					SpawnControl.S.spawnX = true;
 					tmp = SpawnControl.S.giveX ();
@@ -139,6 +145,8 @@ public class PlayerController3 : MonoBehaviour {
 					map = gm.GetComponent<GridMap> ();
 				}
 				if (Input.GetButtonDown ("Y_P3") && SpawnControl.S.spawnY == false) {
+					//FMOD
+					//Sound for spawn select
 					spawnPoint = GameObject.Find ("Spawn_Y(Clone)");
 					SpawnControl.S.spawnY = true;
 					tmp = SpawnControl.S.giveY ();
@@ -301,6 +309,8 @@ public class PlayerController3 : MonoBehaviour {
 	}
 
 	void Die(){
+		//FMOD
+		//Sound for death
 		CameraShake.S.shakeDuration = .5f;
 		myParticle.Play();
 		this.transform.position = spawnPoint.transform.position;
@@ -324,11 +334,17 @@ public class PlayerController3 : MonoBehaviour {
 						charCont.Move (transform.forward);
 						//stopped = false;
 					} else if (check / 100 == 1) { // goal
+						//FMOD
+						//Sound for collision
 						HitGoal ();
 					} else if (check / 100 == 3) { // mine
+						//FMOD
+						//Sound for collision
 						map.BlowMine (check % 100);
 						Die ();
-					} else if (check / 100 == 4){
+					} else if (check / 100 == 4){ //bouncepad
+						//FMOD
+						//Sound for collision
 						Debug.Log ("bounce");
 						charCont.Move(transform.forward);
 						playerPos[0] += x;
@@ -339,6 +355,8 @@ public class PlayerController3 : MonoBehaviour {
 						stopped = false;
 						//charCont.Move(transform.forward);
 					}else { // asteroid
+						//FMOD
+						//Sound for collision
 						stopped = true;
 					}
 				} else { // outside of bounds of map

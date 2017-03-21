@@ -50,6 +50,8 @@ public class ScoreCheck : MonoBehaviour {
 	private GameObject timer;
 	// Use this for initialization
 	void Start () {
+		//FMOD
+		//Sound for entering transition
 		timer = GameObject.Find ("transition");
 	}
 
@@ -118,6 +120,8 @@ public class ScoreCheck : MonoBehaviour {
 				p4.transform.position = Vector3.MoveTowards(p4.transform.position, p4FourthPlace.position,(speed*Time.deltaTime));
 			}
 		}else{
+			//FMOD
+			//Sound for victory screen
 			//player1
 			if (player1Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = adventurer;
@@ -182,6 +186,8 @@ public class ScoreCheck : MonoBehaviour {
 
 
 		if (timer.GetComponent<SceneTransition> ().timer <= 3) {
+			//FMOD
+			//Sound for exiting transition
 			exit.transform.Translate(Vector3.right * (speed*Time.deltaTime));
 		}
 	}

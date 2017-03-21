@@ -125,4 +125,12 @@ public class GameOptions : MonoBehaviour {
 			}
 		}
 	}
+
+	public int GetRound(){
+		return levelsCompleted;
+	}
+
+	public int GetTotalRounds(){
+		return numOfRounds;
+	}
 }
