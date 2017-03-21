@@ -60,17 +60,15 @@ public class ScoreCheck : MonoBehaviour {
 		int first;
 		int second;
 		int third;
-		int fourth;
-		int player1Score = ScoreSystem.Instance.player1Score;
-		int player2Score = ScoreSystem.Instance.player2Score;
-		int player3Score = ScoreSystem.Instance.player3Score;
-		int player4Score = ScoreSystem.Instance.player4Score;
+		int player1Score = ScoreSystem.Instance.player[1].GetScore();
+		int player2Score = ScoreSystem.Instance.player[2].GetScore();
+		int player3Score = ScoreSystem.Instance.player[3].GetScore();
+		int player4Score = ScoreSystem.Instance.player[4].GetScore();
 		scores.Add (player1Score);
 		scores.Add (player2Score);
 		scores.Add (player3Score);
 		scores.Add (player4Score);
 		first = scores.Max ();
-		fourth = scores.Min ();
 		scores.Remove (scores.Max ());
 		scores.Remove (scores.Min ());
 		second = scores.Max ();
@@ -175,10 +173,10 @@ public class ScoreCheck : MonoBehaviour {
 				fourthPlace.text = player4Score+" Points";
 			}
 		}
-		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player1Score+" Points";
-		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player2Score+" Points";
-		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points";
-		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points";
+		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[1].GetScore()+" Points";
+		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[2].GetScore()+" Points";
+		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[3].GetScore()+" Points";
+		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[4].GetScore()+" Points";
 
 
 		if (timer.GetComponent<SceneTransition> ().timer <= 3) {
