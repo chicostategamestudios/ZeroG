@@ -51,7 +51,8 @@ public class Goal : MonoBehaviour
 				p1Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player [1].AddScore (5);
-
+				ScoreSystem.Instance.player [1].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [1].SetPlace (ScoreSystem.Instance.current_level, 1);
 				textField.text = "Green Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
@@ -61,6 +62,8 @@ public class Goal : MonoBehaviour
 				p2Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player [2].AddScore (5);
+				ScoreSystem.Instance.player [2].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [2].SetPlace (ScoreSystem.Instance.current_level, 1);
 				textField.text = "Red Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
@@ -70,6 +73,8 @@ public class Goal : MonoBehaviour
 				p3Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player [3].AddScore (5);
+				ScoreSystem.Instance.player [3].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [3].SetPlace (ScoreSystem.Instance.current_level, 1);
 				textField.text = "Purple Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
@@ -79,6 +84,8 @@ public class Goal : MonoBehaviour
 				p4Win = true;
 				endGame = true;
 				ScoreSystem.Instance.player [4].AddScore (5);
+				ScoreSystem.Instance.player [4].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [4].SetPlace (ScoreSystem.Instance.current_level, 1);
 				textField.text = "Blue Wins!!!";
 				//score.text = "Player 1: "+ScoreSystem.Instance.player1Score+" point(s)\nPlayer 2: "+ScoreSystem.Instance.player2Score+" point(s)\nPlayer 3: "+ScoreSystem.Instance.player3Score+" point(s)\nPlayer 4: "+ScoreSystem.Instance.player4Score+" point(s)";
 			}
@@ -97,6 +104,8 @@ public class Goal : MonoBehaviour
 				p1Win = true;
 				secondPlace = true;
 				ScoreSystem.Instance.player [1].AddScore (3);
+				ScoreSystem.Instance.player [1].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [1].SetPlace (ScoreSystem.Instance.current_level, 2);
 			}
 
 			if (pNum == 1 && p2Win == false && secondPlace == false)
@@ -104,6 +113,8 @@ public class Goal : MonoBehaviour
 				p2Win = true;
 				secondPlace = true;
 				ScoreSystem.Instance.player [2].AddScore (3);
+				ScoreSystem.Instance.player [2].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [2].SetPlace (ScoreSystem.Instance.current_level, 2);
 			}
 
 			if (pNum == 2 && p3Win == false && secondPlace == false)
@@ -111,6 +122,8 @@ public class Goal : MonoBehaviour
 				p3Win = true;
 				secondPlace = true;
 				ScoreSystem.Instance.player [3].AddScore (3);
+				ScoreSystem.Instance.player [3].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [3].SetPlace (ScoreSystem.Instance.current_level, 2);
 			}
 
 			if (pNum == 3 && p4Win == false && secondPlace == false)
@@ -118,6 +131,8 @@ public class Goal : MonoBehaviour
 				p4Win = true;
 				secondPlace = true;
 				ScoreSystem.Instance.player [4].AddScore (3);
+				ScoreSystem.Instance.player [4].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [4].SetPlace (ScoreSystem.Instance.current_level, 2);
 			}
 		}
 
@@ -129,6 +144,8 @@ public class Goal : MonoBehaviour
 				PlayerController.S.StartNewLevel ();
 				p1Win = true;
 				ScoreSystem.Instance.player [1].AddScore (1);
+				ScoreSystem.Instance.player [1].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [1].SetPlace (ScoreSystem.Instance.current_level, 3);
 			}
 
 			if (pNum == 1 && p2Win == false && secondPlace == true)
@@ -136,6 +153,8 @@ public class Goal : MonoBehaviour
 				PlayerController2.S.StartNewLevel ();
 				p2Win = true;
 				ScoreSystem.Instance.player [2].AddScore (1);
+				ScoreSystem.Instance.player [2].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [2].SetPlace (ScoreSystem.Instance.current_level, 3);
 			}
 
 			if (pNum == 2 && p3Win == false && secondPlace == true)
@@ -143,6 +162,8 @@ public class Goal : MonoBehaviour
 				PlayerController3.S.StartNewLevel ();
 				p3Win = true;
 				ScoreSystem.Instance.player [3].AddScore (1);
+				ScoreSystem.Instance.player [3].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [3].SetPlace (ScoreSystem.Instance.current_level, 3);
 			}
 
 			if (pNum == 3 && p4Win == false && secondPlace == true)
@@ -150,8 +171,13 @@ public class Goal : MonoBehaviour
 				PlayerController4.S.StartNewLevel ();
 				p4Win = true;
 				ScoreSystem.Instance.player [4].AddScore (1);
+				ScoreSystem.Instance.player [4].SetTime (ScoreSystem.Instance.current_level, timer.timer);
+				ScoreSystem.Instance.player [4].SetPlace (ScoreSystem.Instance.current_level, 3);
 			}
 		}
+
+
+
 	}
 
     void Update()

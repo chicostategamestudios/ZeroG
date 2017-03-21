@@ -76,6 +76,11 @@ public class GameOptions : MonoBehaviour {
 
             }
             levelsCompleted++;
+			ScoreSystem.Instance.current_level += 1;
+			//Give each player a space to store their stats in for this level
+			for (int i = 1; i <= 4; i++) {
+				ScoreSystem.Instance.player [i].AddLevel (ScoreSystem.Instance.current_level);
+			}
         } else
         {
             SceneManager.LoadScene("Victory");
