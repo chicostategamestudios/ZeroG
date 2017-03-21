@@ -76,6 +76,11 @@ public class GameOptions : MonoBehaviour {
 
             }
             levelsCompleted++;
+			ScoreSystem.Instance.current_level += 1;
+			//Give each player a space to store their stats in for this level
+			for (int i = 1; i <= 4; i++) {
+				ScoreSystem.Instance.player [i].AddLevel (ScoreSystem.Instance.current_level);
+			}
         } else
         {
             SceneManager.LoadScene("Victory");
@@ -88,10 +93,10 @@ public class GameOptions : MonoBehaviour {
 		if(sceneName == "Victory"){
 			if(Input.GetButtonDown("A_P1")){
 				levelsCompleted = 0;
-				ScoreSystem.Instance.player1Score = 0;
-				ScoreSystem.Instance.player2Score = 0;
-				ScoreSystem.Instance.player3Score = 0;
-				ScoreSystem.Instance.player4Score = 0;
+				ScoreSystem.Instance.player [1].SetScore (0);
+				ScoreSystem.Instance.player [2].SetScore (0);
+				ScoreSystem.Instance.player [3].SetScore (0);
+				ScoreSystem.Instance.player [4].SetScore (0);
 				LoadLevel();
 			}
 

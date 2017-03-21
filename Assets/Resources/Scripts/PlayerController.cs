@@ -318,6 +318,7 @@ public class PlayerController : MonoBehaviour {
 		stopped = true;
 		playerPos [0] = respawnPos [0];
 		playerPos [1] = respawnPos [1];
+		ScoreSystem.Instance.player [1].Dies ();
 
 	}
 		

@@ -60,17 +60,15 @@ public class ScoreCheck : MonoBehaviour {
 		int first;
 		int second;
 		int third;
-		int fourth;
-		int player1Score = ScoreSystem.Instance.player1Score;
-		int player2Score = ScoreSystem.Instance.player2Score;
-		int player3Score = ScoreSystem.Instance.player3Score;
-		int player4Score = ScoreSystem.Instance.player4Score;
+		int player1Score = ScoreSystem.Instance.player[1].GetScore();
+		int player2Score = ScoreSystem.Instance.player[2].GetScore();
+		int player3Score = ScoreSystem.Instance.player[3].GetScore();
+		int player4Score = ScoreSystem.Instance.player[4].GetScore();
 		scores.Add (player1Score);
 		scores.Add (player2Score);
 		scores.Add (player3Score);
 		scores.Add (player4Score);
 		first = scores.Max ();
-		fourth = scores.Min ();
 		scores.Remove (scores.Max ());
 		scores.Remove (scores.Min ());
 		second = scores.Max ();
@@ -118,67 +116,69 @@ public class ScoreCheck : MonoBehaviour {
 				p4.transform.position = Vector3.MoveTowards(p4.transform.position, p4FourthPlace.position,(speed*Time.deltaTime));
 			}
 		}else{
+			ScoreSystem.Instance.SetTrophies ();
 			//player1
 			if (player1Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				firstPlace.text = player1Score+" Points";
+				firstPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
 			} else if (player1Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				secondPlace.text = player1Score+" Points";
+				secondPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
 			} else if (player1Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				thirdPlace.text = player1Score+" Points";
+				thirdPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				fourthPlace.text = player1Score+" Points";
+				fourthPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
 			}
 			//player2
 			if (player2Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = wizard;
-				firstPlace.text = player2Score+" Points";
+				firstPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
 			} else if (player2Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = wizard;
-				secondPlace.text = player2Score+" Points";
+				secondPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
 			} else if (player2Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = wizard;
-				thirdPlace.text = player2Score+" Points";
+				thirdPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = wizard;
-				fourthPlace.text = player2Score+" Points";
+				fourthPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
 			}
 			//player3
 			if (player3Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = knight;
-				firstPlace.text = player3Score+" Points";
+				firstPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
 			} else if (player3Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = knight;
-				secondPlace.text = player3Score+" Points";
+				secondPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
 			} else if (player3Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = knight;
-				thirdPlace.text = player3Score+" Points";
+				thirdPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = knight;
-				fourthPlace.text = player3Score+" Points";
+				fourthPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
 			}
 			//player4
 			if (player4Score == first) {
 				firstPlaceSprite.GetComponent<Image>().sprite = pirate;
-				firstPlace.text = player4Score+" Points";
+				firstPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
 			} else if (player4Score == second) {
 				secondPlaceSprite.GetComponent<Image>().sprite = pirate;
-				secondPlace.text = player4Score+" Points";
+				secondPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
 			} else if (player4Score == third) {
 				thirdPlaceSprite.GetComponent<Image>().sprite = pirate;
-				thirdPlace.text = player4Score+" Points";
+				thirdPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
 			} else {
 				fourthPlaceSprite.GetComponent<Image>().sprite = pirate;
-				fourthPlace.text = player4Score+" Points";
+				fourthPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
 			}
 		}
-		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player1Score+" Points";
-		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player2Score+" Points";
-		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player3Score+" Points";
-		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player4Score+" Points";
+		//Flying Ships Score Text
+		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[1].GetScore()+" Points";
+		p2Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[2].GetScore()+" Points";
+		p3Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[3].GetScore()+" Points";
+		p4Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[4].GetScore()+" Points";
 
 
 		if (timer.GetComponent<SceneTransition> ().timer <= 3) {
