@@ -76,6 +76,7 @@ public class ScoreCheck : MonoBehaviour {
 
 		if(SceneManager.GetActiveScene().name == "PlayerStanding"){
 			//player1
+
 			if (player1Score == first) {
 				p1.transform.position = Vector3.MoveTowards(p1.transform.position, p1FirstPlace.position,(speed*Time.deltaTime));
 			} else if (player1Score == second) {
@@ -117,62 +118,12 @@ public class ScoreCheck : MonoBehaviour {
 			}
 		}else{
 			ScoreSystem.Instance.SetTrophies ();
-			//player1
-			if (player1Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				firstPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
-			} else if (player1Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				secondPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
-			} else if (player1Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				thirdPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = adventurer;
-				fourthPlace.text = player1Score+" Points " + ScoreSystem.Instance.player[1].GetTrophy();
-			}
-			//player2
-			if (player2Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = wizard;
-				firstPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
-			} else if (player2Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = wizard;
-				secondPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
-			} else if (player2Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = wizard;
-				thirdPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = wizard;
-				fourthPlace.text = player2Score+" Points " + ScoreSystem.Instance.player[2].GetTrophy();
-			}
-			//player3
-			if (player3Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = knight;
-				firstPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
-			} else if (player3Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = knight;
-				secondPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
-			} else if (player3Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = knight;
-				thirdPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = knight;
-				fourthPlace.text = player3Score+" Points " + ScoreSystem.Instance.player[3].GetTrophy();
-			}
-			//player4
-			if (player4Score == first) {
-				firstPlaceSprite.GetComponent<Image>().sprite = pirate;
-				firstPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
-			} else if (player4Score == second) {
-				secondPlaceSprite.GetComponent<Image>().sprite = pirate;
-				secondPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
-			} else if (player4Score == third) {
-				thirdPlaceSprite.GetComponent<Image>().sprite = pirate;
-				thirdPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
-			} else {
-				fourthPlaceSprite.GetComponent<Image>().sprite = pirate;
-				fourthPlace.text = player4Score+" Points " + ScoreSystem.Instance.player[4].GetTrophy();
-			}
+
+			//Position Victory Screen player avatars and point text. 
+			ShowScore(1, player1Score, adventurer, first, second, third);
+			ShowScore(2, player2Score, wizard, first, second, third);
+			ShowScore(3, player3Score, knight, first, second, third);
+			ShowScore(4, player4Score, pirate, first, second, third);
 		}
 		//Flying Ships Score Text
 		p1Score.GetComponent<TextMesh>().text = ""+ScoreSystem.Instance.player[1].GetScore()+" Points";
@@ -185,5 +136,25 @@ public class ScoreCheck : MonoBehaviour {
 			exit.transform.Translate(Vector3.right * (speed*Time.deltaTime));
 		}
 	}
-		
+
+	//For positioning player avatars and point text on the Victory Screen.
+	void ShowScore(int player, int player_score, Sprite player_sprite, int first, int second, int third)
+	{
+		if (player_score == first) {
+			firstPlaceSprite.GetComponent<Image> ().sprite = player_sprite;
+			firstPlace.text = player_score + " Points " + ScoreSystem.Instance.player [player].GetTrophy ();
+		}
+		else if(player_score == second) {
+			secondPlaceSprite.GetComponent<Image> ().sprite = player_sprite;
+			secondPlace.text = player_score + " Points " + ScoreSystem.Instance.player [player].GetTrophy ();
+		}
+		else if(player_score == third) {
+			thirdPlaceSprite.GetComponent<Image> ().sprite = player_sprite;
+			thirdPlace.text = player_score + " Points " + ScoreSystem.Instance.player [player].GetTrophy ();
+		}
+		else {
+			fourthPlaceSprite.GetComponent<Image> ().sprite = player_sprite;
+			fourthPlace.text = player_score + " Points " + ScoreSystem.Instance.player [player].GetTrophy ();
+		}
+	}
 }

@@ -193,75 +193,15 @@ public class Goal : MonoBehaviour
                 //black.enabled = true;
                 //score.text = "Green: " + ScoreSystem.Instance.player1Score + " points\nRed: " + ScoreSystem.Instance.player2Score + " points\nPurple: " + ScoreSystem.Instance.player3Score + " points\nBlue: " + ScoreSystem.Instance.player4Score + " points";
             }
-            if (levelTimer <= 5)
-            {
-                textField.text = "5";
-            }
-            if (levelTimer <= 4)
-            {
-                textField.text = "4";
-            }
-            if (levelTimer <= 3)
-            {
-                textField.text = "3";
-            }
-            if (levelTimer <= 2)
-            {
-                textField.text = "2";
-            }
-            if (levelTimer <= 1)
-            {
-                textField.text = "1";
-            }
+			textField.text = (((int) levelTimer) - 1).ToString ();
             if (levelTimer < 0)
             {
                 textField.text = "Loading...";
-                
             }
             else
             {
-
-                if (endTime > 9)
-                {
-                    endGameTimerGameObject.SetActive(true);
-                    endGameTimer.text = "10";
-                }
-                else if (endTime > 8)
-                {
-                    endGameTimer.text = "9";
-                }
-                else if (endTime > 7)
-                {
-                    endGameTimer.text = "8";
-                }
-                else if (endTime > 6)
-                {
-                    endGameTimer.text = "7";
-                }
-                else if (endTime > 5)
-                {
-                    endGameTimer.text = "6";
-                }
-                else if (endTime > 4)
-                {
-                    endGameTimer.text = "5";
-                }
-                else if (endTime > 3)
-                {
-                    endGameTimer.text = "4";
-                }
-                else if (endTime > 2)
-                {
-                    endGameTimer.text = "3";
-                }
-                else if (endTime > 1)
-                {
-                    endGameTimer.text = "2";
-                }
-                else if (endTime > 0)
-                {
-                    endGameTimer.text = "1";
-                }
+                endGameTimerGameObject.SetActive(true);
+				endGameTimer.text = (((int) endTime) + 1).ToString ();
             }
         }
 
