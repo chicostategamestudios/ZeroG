@@ -25,10 +25,13 @@ public class PauseGame : MonoBehaviour {
 	//When game is paused turns on startScreen in canvas and sets timescale to 0
 	public void Pause(){
 		if (!paused) {
+			//FMOD
+			//Sound for entering game pause
 			pauseScreen.SetActive (true);
 			Time.timeScale = 0;
 			paused = true;
 		} else {
+			//Sound for exiting game pause
 			Time.timeScale = 1;
 			paused = false;
 		}

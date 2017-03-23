@@ -109,7 +109,8 @@ public class GridMap : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		//playMusic = true;
+		//FMOD
+		//Start of level ambiance
 		p2 = GameObject.Find("Player2");
 		p3 = GameObject.Find ("Player3");
 		p4 = GameObject.Find ("Player4");
@@ -341,6 +342,8 @@ public class GridMap : MonoBehaviour {
 						myGreen.sprite = greenLit;
 					}
 					if (timer < 0) {
+						//FMOD
+						//Start for game music
 						PlayerController.S.inMenu = false;
                         if(GameOptions.player2)
 							PlayerController2.S.inMenu = false;

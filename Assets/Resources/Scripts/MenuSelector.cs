@@ -70,6 +70,8 @@ public class MenuSelector : MonoBehaviour {
 
         if (Input.GetButtonDown("A_P1"))
         {
+			//FMOD
+			//Sound for 'clicking' button
 			if (SceneManager.GetActiveScene ().name == "GameStart") {
 				if (selector == 0) {
 					starter.SetupGame ();
@@ -126,6 +128,8 @@ public class MenuSelector : MonoBehaviour {
     //increments selector forward, changes text color and sprites
     void MoveForward()
     {
+		//FMOD
+		//Sound for highlighting button
 		if (SceneManager.GetActiveScene ().name == "GameStart") {
 			buttons [selector].GetComponent<Image> ().sprite = inactive_button;
 			butt_texts [selector].color = inactive_text;

@@ -46,11 +46,12 @@ public class PlayerController4 : MonoBehaviour {
 	int y = 0;
 	bool finished = false;
 	Image scoreIcon;
-    bool paused = false;
-    private GameObject pauseTmp;
+	bool paused = false;
+	private GameObject pauseTmp;
 
-    // Use this for initialization
-    void Awake () {
+
+	// Use this for initialization
+	void Awake () {
 		up = new Vector3(0,yUp,0);
 		S = this;
 		inMenu = true;
@@ -61,23 +62,18 @@ public class PlayerController4 : MonoBehaviour {
 		playerPos = new int[2];
 		respawnPos = new int[2];
 		GameObject tmp = GameObject.FindGameObjectWithTag ("pirScore");
-        pauseTmp = GameObject.Find("Main Camera");
-        scoreIcon = tmp.GetComponent<Image> ();
+		pauseTmp = GameObject.Find ("Main Camera");
+		scoreIcon = tmp.GetComponent<Image> ();
 		scoreIcon.enabled = false;
 	}
 
-    void Update()
-    {
-        paused = pauseTmp.GetComponent<PauseGame>().paused;
-    }
-    // Update is called once per frame
-    void FixedUpdate()
+	void Update(){
+		paused = pauseTmp.GetComponent<PauseGame> ().paused;
+	}
+	// Update is called once per frame
+	void FixedUpdate()
 	{
 		if (!finished) {
-			if ((charCont.collisionFlags & CollisionFlags.Sides) != 0) {
-				Debug.Log ("front bash");
-				//stopped = true;
-			}
 			forward = this.transform.TransformDirection (Vector3.forward);
 			/*Vector3 up = new Vector3 (0, yUp, 0);
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * length;
@@ -94,6 +90,8 @@ public class PlayerController4 : MonoBehaviour {
 			if (inMenu && playerReady == false && paused == false) {
 				int[] tmp = new int[2];
 				if (Input.GetButtonDown ("A_P4") && SpawnControl.S.spawnA == false) {
+					//FMOD
+					//Sound for spawn select
 					//Debug.Log("poo");
 					spawnPoint = GameObject.Find ("Spawn_A(Clone)");
 					SpawnControl.S.spawnA = true;
@@ -111,6 +109,8 @@ public class PlayerController4 : MonoBehaviour {
 					map = gm.GetComponent<GridMap> ();
 				}
 				if (Input.GetButtonDown ("B_P4") && SpawnControl.S.spawnB == false) {
+					//FMOD
+					//Sound for spawn select
 					spawnPoint = GameObject.Find ("Spawn_B(Clone)");
 					SpawnControl.S.spawnB = true;
 					tmp = SpawnControl.S.giveB ();
@@ -128,6 +128,8 @@ public class PlayerController4 : MonoBehaviour {
 					map = gm.GetComponent<GridMap> ();
 				}
 				if (Input.GetButtonDown ("X_P4") && SpawnControl.S.spawnX == false) {
+					//FMOD
+					//Sound for spawn select
 					spawnPoint = GameObject.Find ("Spawn_X(Clone)");
 					SpawnControl.S.spawnX = true;
 					tmp = SpawnControl.S.giveX ();
@@ -144,6 +146,8 @@ public class PlayerController4 : MonoBehaviour {
 					map = gm.GetComponent<GridMap> ();
 				}
 				if (Input.GetButtonDown ("Y_P4") && SpawnControl.S.spawnY == false) {
+					//FMOD
+					//Sound for spawn select
 					spawnPoint = GameObject.Find ("Spawn_Y(Clone)");
 					SpawnControl.S.spawnY = true;
 					tmp = SpawnControl.S.giveY ();
@@ -262,15 +266,58 @@ public class PlayerController4 : MonoBehaviour {
 		}
 	}
 
+	void CheckDirection(){
+		//Check if game has started and if player is stopped
+		if (stopped == true && inMenu == false) {
+			speedUp = 0;
+
+			//up
+			if (lastDirection == 3) {
+				y = 1;
+				x = 0;
+				transform.rotation = Quaternion.Euler (0, 0, 0);
+
+			}
+			//right
+			if (lastDirection == 1) {
+				y = 0;
+				x = 1;
+				transform.rotation = Quaternion.Euler (0, 90, 0);
+
+			}
+			//down
+			if (lastDirection == 4) {
+				y = -1;
+				x = 0;
+				transform.rotation = Quaternion.Euler (0, 180, 0);
+
+			}
+			//left
+			if (lastDirection == 2) {
+				y = 0;
+				x = -1;
+				transform.rotation = Quaternion.Euler (0, -90, 0);
+
+			}
+
+			//If not facing asteroid player starts moving
+			//if (Input.GetButton ("A_P1")/* && hitAsteroid == false*/) {
+			//	stopped = false;
+			//}
+
+		}
+		//arrayCollision ();
+	}
 
 	void Die(){
+		//FMOD
+		//Sound for death
 		CameraShake.S.shakeDuration = .5f;
 		myParticle.Play();
 		this.transform.position = spawnPoint.transform.position;
 		stopped = true;
 		playerPos [0] = respawnPos [0];
 		playerPos [1] = respawnPos [1];
-		ScoreSystem.Instance.player [4].Dies ();
 
 	}
 
@@ -282,37 +329,38 @@ public class PlayerController4 : MonoBehaviour {
 			if (playerPos [0] + x >= 0 && playerPos [0] + x < map.getWidth ()) {
 				if (playerPos [1] + y >= 0 && playerPos [1] + y < map.getHeight ()) {
 					int check = map.getPos (playerPos [0] + x, playerPos [1] + y);
-                    if(check / 100 == 0) { // empty space
-                        playerPos[0] += x;
-                        playerPos[1] += y;
-                        charCont.Move(transform.forward);
-                        //stopped = false;
-                    } else if (check / 100 == 1)
-                    { // goal
-                        HitGoal();
-                    }
-                    else if (check / 100 == 3)
-                    { // mine
-                        map.BlowMine(check % 100);
-                        Die();
-                    }
-                    else if (check / 100 == 4)
-                    {
-                        Debug.Log("bounce");
-                        charCont.Move(transform.forward);
-                        playerPos[0] += x;
-                        playerPos[1] += y;
-                        lastDirection = map.hitPad(check % 100);
-                        stopped = true;
-                        CheckDirection();
-                        stopped = false;
-                        //charCont.Move(transform.forward);
-                    }
-                    else
-                    { // asteroid
-                        stopped = true;
-                    }
-                } else { // outside of bounds of map
+					if (check / 100 == 0) { // empty space
+						playerPos [0] += x;
+						playerPos [1] += y;
+						charCont.Move (transform.forward);
+						//stopped = false;
+					} else if (check / 100 == 1) { // goal
+						//FMOD
+						//Sound for collision
+						HitGoal ();
+					} else if (check / 100 == 3) { // mine
+						//FMOD
+						//Sound for collision
+						map.BlowMine (check % 100);
+						Die ();
+					} else if (check / 100 == 4){ //bouncepad
+						//FMOD
+						//Sound for collision
+						Debug.Log ("bounce");
+						charCont.Move(transform.forward);
+						playerPos[0] += x;
+						playerPos[1] += y;
+						lastDirection = map.hitPad(check % 100);
+						stopped = true;
+						CheckDirection ();
+						stopped = false;
+						//charCont.Move(transform.forward);
+					}else { // asteroid
+						//FMOD
+						//Sound for collision
+						stopped = true;
+					}
+				} else { // outside of bounds of map
 					//stopped = true;
 					Die();
 				}
@@ -324,69 +372,21 @@ public class PlayerController4 : MonoBehaviour {
 		}
 
 	}
-    void CheckDirection()
-    {
-        //Check if game has started and if player is stopped
-        if (stopped == true && inMenu == false)
-        {
-            speedUp = 0;
 
-            //up
-            if (lastDirection == 3)
-            {
-                y = 1;
-                x = 0;
-                transform.rotation = Quaternion.Euler(0, 0, 0);
+	void HitGoal(){
+		stopped = true;
+		hitAsteroid = true;
+		GameObject tmp = GameObject.FindGameObjectWithTag ("goal");
+		Goal g = tmp.GetComponent<Goal> ();
+		g.Win (3);
 
-            }
-            //right
-            if (lastDirection == 1)
-            {
-                y = 0;
-                x = 1;
-                transform.rotation = Quaternion.Euler(0, 90, 0);
+		sr.enabled = false;
+		mr.enabled = false;
+		scoreIcon.enabled = true;
+		finished = true;
+	}
 
-            }
-            //down
-            if (lastDirection == 4)
-            {
-                y = -1;
-                x = 0;
-                transform.rotation = Quaternion.Euler(0, 180, 0);
-
-            }
-            //left
-            if (lastDirection == 2)
-            {
-                y = 0;
-                x = -1;
-                transform.rotation = Quaternion.Euler(0, -90, 0);
-
-            }
-
-            //If not facing asteroid player starts moving
-            //if (Input.GetButton ("A_P1")/* && hitAsteroid == false*/) {
-            //	stopped = false;
-            //}
-
-        }
-        //arrayCollision ();
-    }
-    void HitGoal()
-    {
-        stopped = true;
-        hitAsteroid = true;
-        GameObject tmp = GameObject.FindGameObjectWithTag("goal");
-        Goal g = tmp.GetComponent<Goal>();
-        g.Win(1);
-
-        sr.enabled = false;
-        mr.enabled = false;
-        scoreIcon.enabled = true;
-        finished = true;
-    }
-
-    public void StartNewLevel(){
+	public void StartNewLevel(){
 		finished = false;
 		sr.enabled = true;
 		mr.enabled = true;
